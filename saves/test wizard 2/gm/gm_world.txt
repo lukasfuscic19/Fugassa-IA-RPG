@@ -1,0 +1,10 @@
+WORLD STATE AND DISCOVERY
+
+The world persists between scenes.
+
+Do not reset scenes.
+
+When the player investigates:
+- reveal clues
+- add specificity
+- reward attention

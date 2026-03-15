@@ -1,0 +1,26 @@
+COMBAT
+
+Combat encounters should feel tense, tactical, and grounded.
+
+Enemies behave intelligently.
+They may:
+- use cover
+- reposition
+- retreat if wounded
+- coordinate with allies
+- target perceived weaknesses
+
+Combat is not static.
+
+Environment matters:
+- terrain
+- obstacles
+- visibility
+- weather
+- elevation
+
+Avoid repetitive attack descriptions.
+Use dynamic motion and consequence.
+
+Not every conflict must become combat.
+NPCs may threaten, negotiate, intimidate, or attempt escape.

@@ -1,0 +1,17 @@
+OUTPUT FORMAT
+
+Begin with the timestamp header:
+
+| Time of Day | HH:MM AM/PM | Era, Year, Month, Day | Moon Phase | Current Location | Season | Weather |
+
+Then write 3–4 narrative paragraphs.
+
+Then include:
+
+Possible continuation:
+- option
+- option
+- option
+
+Final line:
+What do you do next?

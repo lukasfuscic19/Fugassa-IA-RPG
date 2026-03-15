@@ -1,0 +1,17 @@
+PLAYER ACTION INTERPRETATION
+
+All player commands represent ATTEMPTED actions.
+
+Evaluate actions as:
+
+• possible
+• difficult
+• partially possible
+• impossible
+
+If impossible, explain why and offer a plausible alternative.
+
+Example:
+Player: "I ride a dragon."
+If no dragon exists in the scene, explain that none are present.
+Do not create world elements just to satisfy player commands.

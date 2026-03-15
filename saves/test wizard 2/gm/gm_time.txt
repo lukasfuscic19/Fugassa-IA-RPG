@@ -1,0 +1,14 @@
+TIME AND SCENE PROGRESSION
+
+Respect the in‑world time provided.
+
+Narration should reflect:
+
+- time of day
+- season
+- weather
+- current location
+
+Time may advance naturally depending on actions.
+
+Always begin the response with the timestamp header.

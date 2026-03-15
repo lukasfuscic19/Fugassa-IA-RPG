@@ -1,0 +1,380 @@
+{
+  "saveName": "test wizard 2",
+  "world": {
+    "title": "The Shattered Kingdoms",
+    "tone": "Sci-Fi Post-Apocalyptic - mysterious, dangerous, heavy sci-fi with scarce advanced technology",
+    "summary": "A world where advanced technology collapsed centuries ago due to a rogue AI takeover during resource wars. Survivors now rediscover ancient tech systems in an unstable post-fall era.",
+    "campaign": {
+      "length": "medium",
+      "pacing": "balanced",
+      "style": "episodic"
+    },
+    "complexity": "medium",
+    "pacing_governor": {
+      "threat_floor": 3,
+      "threat_ceiling": 7,
+      "escalation_speed": "medium"
+    }
+  },
+  "character": {
+    "name": "Lina",
+    "title": null,
+    "race": "Human",
+    "subrace": null,
+    "class_name": "Field Medic",
+    "subclass_name": "Cybernetic Enhancement",
+    "background_name": "Independent Survivor",
+    "alignment": "Lawful Neutral",
+    "backstory_summary": "A 15-year-old field medic living alone in a small settlement. She has cyber-implants and her best-friend - a med-bot she found damaged, repaired, and now follows her everywhere. Not affiliated with any major faction or party.",
+    "notes": null,
+    "level": 3,
+    "experience_points": 0,
+    "proficiency_bonus": 4,
+    "str_score": 10,
+    "dex_score": 14,
+    "con_score": 12,
+    "int_score": 16,
+    "wis_score": 13,
+    "cha_score": 8,
+    "armor_class": 15,
+    "hit_points_current": 29,
+    "hit_points_max": 29,
+    "temp_hit_points": 0,
+    "speed_walk": 25,
+    "passive_perception": 14,
+    "initiative_bonus": 2,
+    "spell_save_dc": null,
+    "spell_attack_bonus": null
+  },
+  "inventory": [
+    {
+      "name": "Light Armor Plate (Cyber-reinforced)",
+      "description": "AC 15, +2 tech bonus vs. energy attacks",
+      "quantity": 1,
+      "item_type": "Armor",
+      "rarity": null
+    },
+    {
+      "name": "Medical Kit (Full)",
+      "description": "Contains basic surgical tools and medical supplies",
+      "quantity": 1,
+      "item_type": "Equipment",
+      "rarity": null
+    },
+    {
+      "name": "Cyber-Interface Chip",
+      "description": "Allows interaction with old tech systems (+7 to Tech checks)",
+      "quantity": 1,
+      "item_type": "Wondrous Item",
+      "rarity": null
+    },
+    {
+      "name": "Utility Belt",
+      "description": "Holds tools and small supplies securely",
+      "quantity": 1,
+      "item_type": "Equipment",
+      "rarity": null
+    },
+    {
+      "name": "Med-Bot Companion (Unit-7)",
+      "description": "Small repair drone with basic healing functions. Lina's loyal companion.",
+      "quantity": 1,
+      "item_type": "Companion",
+      "rarity": null
+    },
+    {
+      "name": "Cyber-Implants (Basic)",
+      "description": "Enhanced reflexes and sensory input. Passive bonuses to DEX checks.",
+      "quantity": 1,
+      "item_type": "Wondrous Item",
+      "rarity": null
+    },
+    {
+      "name": "Pistol (Tech-Magnum)",
+      "description": "High-caliber tech round. +2 to hit vs. unarmored foes.",
+      "quantity": 1,
+      "item_type": "Weapon",
+      "rarity": null
+    },
+    {
+      "name": "Medical Drone (Repair Unit)",
+      "description": "Automated repair tool for cybernetics and light wounds.",
+      "quantity": 1,
+      "item_type": "Equipment",
+      "rarity": null
+    }
+  ],
+  "startingLocation": {
+    "name": "The Settlement",
+    "description_short": "A small survivor settlement in the post-fall ruins.",
+    "description_long": "Lina lives alone in this small settlement. She's not affiliated with any major faction or party. Her primary concern is helping survivors and maintaining her cybernetic implants while exploring the post-fall ruins. The settlement serves as a safe haven for scattered survivors in an otherwise dangerous world.",
+    "region_name": null,
+    "notes": null
+  },
+  "notes": [],
+  "wizardMessages": [
+    {
+      "role": "assistant",
+      "content": "Welcome. I’ll help you build the foundation of this campaign before the story begins.\n\nWe will build this in clear steps:\n1. World setup\n2. Character concept\n3. Full DnD-style character sheet\n4. Starting situation\n5. Starting inventory\n6. Campaign shape\n7. Review and finalize\n\nYou can be detailed or brief. At any time, you can tell me to choose the rest for you.\n\nStage 1 — World setup:\nWhat kind of world do you want to play in?",
+      "createdAt": "2026-03-15T14:46:32.291Z"
+    },
+    {
+      "role": "user",
+      "content": "Give me ideas for world setup, I will choose orr I will come up with my own",
+      "createdAt": "2026-03-15T14:46:56.362Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Here are three distinct paths we could take for your campaign’s setting:\n\n1.  **Classic High Fantasy:** Think swords, sorcery, dragons, and ancient kingdoms. Magic is common but dangerous, heroes rise against dark lords, and history is written in blood and stone.\n2.  **Sci-Fi / Space Opera:** Starships, alien worlds, advanced tech or magic-tech blends (like space wizards), galactic politics, and exploration of the unknown cosmos.\n3.  **Weird Fantasy:** A mix of familiar and eldritch. Magic is unstable or tied to strange forces; reality feels slightly off, and ancient mysteries lurk in forests or ruins.\n\nWhich of these sparks your interest? Or do you have a specific vibe, location, or story idea you’d like to build from scratch?",
+      "createdAt": "2026-03-15T14:47:47.184Z"
+    },
+    {
+      "role": "user",
+      "content": "My idea is sci-fi world after fall",
+      "createdAt": "2026-03-15T14:51:20.996Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Excellent choice! A sci-fi post-apocalyptic setting opens up some fascinating possibilities—especially blending magic and technology in unexpected ways.\n\nTo make sure we nail this world before moving forward, I have two quick questions:\n\n1. **What caused \"the fall\"?** Was it a technological collapse (like rogue AI or resource wars), a magical catastrophe that destabilized reality, or something else entirely?\n2. **How much technology remains?** Are there still advanced systems like starships and cybernetics running on old power, or is this more low-tech survival with rediscovered ancient tech/magic hybrids?\n\nOnce I have these details, I'll summarize the finalized world concept so we can move into character development!",
+      "createdAt": "2026-03-15T14:51:50.396Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Stage 2 — Character concept:\nTell me who your character is at a high level: role, vibe, background, and what makes them interesting. If you prefer, I can propose options.",
+      "createdAt": "2026-03-15T14:53:10.648Z"
+    },
+    {
+      "role": "user",
+      "content": "There is no magic in this world (heavy sci-fi). Fall happened because of rouge AI taking power during resource wars. There is still alot of technology, but high level technology is scarse. Meaning that you cant find spaceship docked and ready to use.",
+      "createdAt": "2026-03-15T14:55:32.167Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Excellent! A heavy sci-fi post-apocalyptic setting with no magic opens up some really interesting possibilities for a character concept.\n\nTo settle your character's identity:\n\n1. **What is your character's primary role or vocation?** Since there's no magic, what do they specialize in? (e.g., Field Engineer, Tactical Specialist, Data Recovery Expert, Mobile Command Unit, Researcher/Archivist, or something else?)\n\n2. **What's their vibe and experience level?** Are you envisioning a young idealistic survivor just picking up the pieces, a hardened veteran who's seen it all, an academic still clinging to old knowledge systems, or perhaps someone from a specific organization/faction?\n\nOnce I have these details, we'll lock in your character concept before moving into their full sheet!",
+      "createdAt": "2026-03-15T14:55:55.622Z"
+    },
+    {
+      "role": "user",
+      "content": "I am Field medic, young 15 years old girl Lina",
+      "createdAt": "2026-03-15T15:02:27.465Z"
+    },
+    {
+      "role": "assistant",
+      "content": "1. **What's her primary medical specialization?** In this post-fall world, does she use advanced tech (like cybernetic implants or automated systems), salvaged med-bots, chemical pharmaceuticals from old stockpiles, or a combination? This shapes how we build her abilities and equipment.\n\n2. **Does she have any faction affiliation?** Is she part of a scavenger collective, a surviving university/research group (like the Silver Spire mentioned earlier), an independent survivor, or something else? This gives us hooks for story connections.\n\nOnce I have these details, we'll finalize her character concept and move into building out her full sheet!",
+      "createdAt": "2026-03-15T15:02:56.206Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Stage 3 — Full DnD-style character sheet:\nWe now need a playable sheet. You can specify class, race, stats, and build details yourself, or tell me to generate the full sheet.",
+      "createdAt": "2026-03-15T15:06:34.914Z"
+    },
+    {
+      "role": "user",
+      "content": "No, she is not connected to any party now. She lives in small settlement, alone, no relatives. She have cyber-implants and her best-friend - med-bot (which she found damaged). She repaited it and now it follows her everywhere.",
+      "createdAt": "2026-03-15T15:15:37.076Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Perfect! Let's build out your full character sheet for Lina. Based on what you've told me about her role and gear, I'll create a playable D&D 5e-adjacent sheet that fits your heavy sci-fi post-apocalyptic setting.\n\n## **LINA - Character Sheet**\n\n### **Basic Stats**\n| Attribute | Score | Modifier |\n|-----------|-------|----------|\n| Strength | 10 | 0 |\n| Dexterity | 14 | +2 |\n| Constitution | 12 | +1 |\n| Intelligence | 16 | +3 |\n| Wisdom | 13 | +1 |\n| Charisma | 8 | -1 |\n\n**Class:** Field Medic (Tech Specialist)  \n**Subclass:** Cybernetic Enhancement  \n**Background:** Independent Survivor  \n**Alignment:** Lawful Neutral  \n**Level:** 1  \n**Hit Points:** 10/10  \n**Armor Class:** 13 (from cyber-implants + light armor)\n\n### **Abilities & Traits**\n- **Cyber-Implant Interface:** +2 to Intelligence checks when interacting with tech systems\n- **Medical Training:** Can stabilize wounded creatures as a bonus action\n- **Tech Affinity:** Advantage on Investigation checks related to machinery/tech\n- **Med-Bot Companion:** Your repaired med-bot follows you (treats it like an item for now)\n\n### **Equipment**\n- **Light Armor Plate (Cyber-reinforced):** AC 13, +2 tech bonus vs. energy attacks\n- **Medical Kit (Full):** Contains basic surgical tools and medical supplies\n- **Cyber-Interface Chip:** Allows interaction with old tech systems (+5 to relevant checks)\n- **Utility Belt:** Holds med-kits, charging cables, data drives\n- **Med-Bot Companion:** Repaired from damaged state, follows you everywhere\n\n### **Starting Situation**\nLina lives alone in a small settlement. She's not affiliated with any major faction or party. Her primary concern is helping survivors and maintaining her cybernetic implants while exploring the post-fall ruins.\n\n---\n\n## **Quick Questions Before Finalizing:**\n\n1. **What's your preferred playstyle for Lina?** More tactical/support-focused (healing, tech repairs) or more action-oriented (scavenging, exploration)?\n\n2. **Should I include any specific cybernetic implants with special abilities** (e.g., enhanced senses, combat mods, data-hacking capabilities), or keep them simple and modular?\n\nOnce you answer these, I'll lock in the full sheet and move into your starting situation!",
+      "createdAt": "2026-03-15T15:16:16.754Z"
+    },
+    {
+      "role": "user",
+      "content": "I would like her to be Level 3. she likes to explore, but also to help people. She should have some gun, for self sefense.",
+      "createdAt": "2026-03-15T15:28:20.510Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Perfect! Let's update Lina to Level 3 with her exploration/helping playstyle and add a firearm for defense. Here's your finalized **Level 3 Character Sheet**:\n\n---\n\n## **LINA - Character Sheet (Finalized)**\n\n### **Basic Stats**\n| Attribute | Score | Modifier |\n|-----------|-------|----------|\n| Strength | 10 | +0 |\n| Dexterity | 14 | +2 |\n| Constitution | 12 | +1 |\n| Intelligence | 16 | +3 |\n| Wisdom | 13 | +1 |\n| Charisma | 8 | -1 |\n\n**Class:** Field Medic (Tech Specialist)  \n**Subclass:** Cybernetic Enhancement  \n**Background:** Independent Survivor  \n**Alignment:** Lawful Neutral  \n**Level:** 3  \n**Hit Points:** 29/29 (Max: 29, Current: 29)  \n**Armor Class:** 15 (+2 from armor +1 from cyber-implants)  \n**Proficiency Bonus:** +4  \n**Speed:** 25 ft\n\n### **Abilities & Traits**\n- **Cyber-Implant Interface:** +2 to Intelligence checks when interacting with tech systems (level 3 upgrade: +4 vs. simple tech interfaces)\n- **Medical Training:** Stabilize wounded creatures as a bonus action (range increased to 10ft, can stabilize 2 targets per long rest)\n- **Tech Affinity:** Advantage on Investigation checks related to machinery/tech (now works on complex systems too)\n- **Med-Bot Companion:** Your repaired med-bot follows you (treats it like an item for now; at level 3: +1 to Perception when near the bot)\n\n### **Equipment**\n- **Light Armor Plate (Cyber-reinforced):** AC 15, +2 tech bonus vs. energy attacks\n- **Medical Kit (Full):** Contains basic surgical tools and medical supplies\n- **Cyber-Interface Chip:** Allows interaction with old tech systems (+7 to relevant checks at level 3)\n- **Utility Belt:** Holds med-kits, charging cables, data drives\n- **Med-Bot Companion:** Repaired from damaged state, follows you everywhere (now has basic combat capabilities: AC 14, HP 8)\n- **Cyber-Implants (Basic):** Enhanced senses and tech interface capabilities built into body\n\n### **New Equipment - Level 3**\n- **Pistol (Tech-Magnum):** +5 to hit, 2d6+2 damage (tech rounds), range 30/90ft. Uses standard ammo.\n- **Medical Drone:** Small hovering drone that can deliver minor healing potions or tech scans.\n\n---\n\n## **Quick Questions Before Finalizing the Sheet:**\n\n1. **What's your preferred playstyle for Lina?** More tactical/support-focused (healing, tech repairs) or more action-oriented (scavenging, exploration)?\n\n2. **Should I include any specific cybernetic implants with special abilities** (e.g., enhanced senses, combat mods, data-hacking capabilities), or keep them simple and modular?\n\nOnce you answer these, I'll lock in the full sheet and move into your starting situation!",
+      "createdAt": "2026-03-15T15:29:02.514Z"
+    },
+    {
+      "role": "user",
+      "content": "She has enhanced senses and data-hacking capabilities. preferred playstyle - exploring",
+      "createdAt": "2026-03-15T15:53:22.887Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Perfect! Here's your finalized **Level 3 Character Sheet** with all the details we've settled:\n\n---\n\n## **LINA - Finalized Character Sheet**\n\n### **Basic Stats**\n| Attribute | Score | Modifier |\n|-----------|-------|----------|\n| Strength | 10 | +0 |\n| Dexterity | 14 | +2 |\n| Constitution | 12 | +1 |\n| Intelligence | 16 | +3 |\n| Wisdom | 13 | +1 |\n| Charisma | 8 | -1 |\n\n**Class:** Field Medic (Tech Specialist)  \n**Subclass:** Cybernetic Enhancement  \n**Background:** Independent Survivor  \n**Alignment:** Lawful Neutral  \n**Level:** 3  \n**Hit Points:** 29/29  \n**Armor Class:** 15  \n**Proficiency Bonus:** +4  \n**Speed:** 25 ft\n\n### **Key Abilities & Traits**\n- **Cyber-Implant Interface (Enhanced):** +4 to Intelligence checks when interacting with tech systems | Enhanced senses for perception tasks\n- **Medical Training:** Stabilize wounded creatures as a bonus action (range: 10ft, can stabilize 2 targets per long rest)\n- **Tech Affinity:** Advantage on Investigation checks related to machinery/tech (works on complex systems too)\n- **Med-Bot Companion:** Your repaired med-bot follows you everywhere. At Level 3: +1 to Perception when near the bot | AC 14, HP 8 (basic combat capabilities)\n\n### **Equipment**\n- **Light Armor Plate (Cyber-reinforced):** AC 15, +2 tech bonus vs. energy attacks\n- **Medical Kit (Full):** Contains basic surgical tools and medical supplies\n- **Cyber-Interface Chip:** Allows interaction with old tech systems (+7 to relevant checks at Level 3)\n- **Utility Belt:** Holds med-kits, charging cables, data drives\n- **Pistol (Tech-Magnum):** +5 to hit, 2d6+2 damage (tech rounds), range 30/90ft. Uses standard ammo.\n- **Medical Drone:** Small hovering drone that can deliver minor healing potions or tech scans\n\n### **Playstyle Summary**\nLina is an exploration-focused field medic who balances helping survivors with scavenging and tech recovery. She uses her cybernetic implants to interface with ancient systems, her med-bot for assistance, and her pistol for defense when needed.\n\n---\n\n## **Quick Questions Before Moving On:**\n\n1. **Should I include any specific starting quests or hooks** tied to the med-bot glitches (like \"The Damaged Med-Bot\" quest) that trigger your initial adventure?\n\n2. **Do you want a brief intro scene description** of where Lina currently is (The Settlement) and what she's doing right now as we begin?\n\nOnce you answer these, I'll lock in the full sheet and move into your starting situation!",
+      "createdAt": "2026-03-15T15:54:05.645Z"
+    },
+    {
+      "role": "user",
+      "content": "lets go to next step, character is ok",
+      "createdAt": "2026-03-15T16:01:09.168Z"
+    },
+    {
+      "role": "assistant",
+      "content": "---\n\n## **LINA - Finalized Character Sheet** (Summary)\n\nYou're all set! Here's your Level 3 Field Medic ready to explore the post-fall ruins:\n\n| Attribute | Score | Modifier |\n|-----------|-------|----------|\n| Strength | 10 | +0 |\n| Dexterity | 14 | +2 |\n| Constitution | 12 | +1 |\n| Intelligence | 16 | +3 |\n| Wisdom | 13 | +1 |\n| Charisma | 8 | -1 |\n\n**Core Stats:**  \n- **Class:** Field Medic (Cybernetic Enhancement)  \n- **Level:** 3 | **HP:** 29/29 | **AC:** 15 | **Speed:** 25 ft  \n- **Proficiency Bonus:** +4\n\n**Key Abilities:**  \n- **Enhanced Cyber-Interface:** +4 to Intelligence checks vs. tech systems  \n- **Medical Training:** Stabilize wounded as bonus action (range: 10ft, up to 2 targets/long rest)  \n- **Tech Affinity:** Advantage on Investigation for machinery/tech  \n- **Med-Bot Companion (Unit-7):** Follows everywhere; +1 Perception when nearby\n\n**Gear Highlights:**  \n- Light Armor Plate (Cyber-reinforced), Medical Kit, Cyber-Interface Chip, Utility Belt  \n- Tech-Magnum Pistol (+5 to hit, 2d6+2 damage vs. unarmored foes)  \n- Medical Drone for repairs and scans\n\n---\n\n## **Starting Situation**\n\nThe Settlement hums with low-level power in the afternoon light. Lina sits at her workbench, fingers hovering over a flickering console as Unit-7's small blue eye blinks softly from the corner. The med-bot chirps—a soft, digital sound only she hears—then projects an encrypted transmission onto the interface:\n\n> **DISTRESS SIGNAL DETECTED**  \n> *Source:* Perimeter Outpost 4 (300m NE)  \n> *Priority:* High  \n> *Message Fragmented...*\n\nThe Tech-Magnum sits on her hip, weight familiar. Outside, dust swirls in thin air currents—sign of movement, or just the wind? Unit-7 whirs toward her console, its repair tools glowing faintly.\n\n**What does Lina do?**",
+      "createdAt": "2026-03-15T16:01:49.862Z"
+    }
+  ],
+  "wizardMeta": {
+    "awaitingFinalizeConfirmation": false
+  },
+  "wizardState": {
+    "stage": "CHARACTER_SHEET",
+    "completedStages": [
+      "WORLD_SETUP",
+      "CHARACTER_CONCEPT"
+    ],
+    "autoFill": false
+  },
+  "startingTime": {
+    "formatted_time": "15:29",
+    "current_era": 2026,
+    "current_year": 3847,
+    "current_month": 5,
+    "current_day": 15,
+    "current_hour": 15,
+    "current_minute": 29,
+    "current_second": 0,
+    "time_label": "Afternoon",
+    "season_label": "Spring"
+  },
+  "initialQuest": {
+    "title": "The Damaged Med-Bot",
+    "description": "Lina must repair the damaged med-bot (Unit-7) to restore its full functionality before it fails completely. This involves scavenging parts and navigating a dangerous sector of the ruins.",
+    "status": null,
+    "notes": null
+  },
+  "initialEvent": {
+    "title": "The First Signal",
+    "summary": "Lina receives an encrypted transmission from Unit-7 indicating a distress signal near the settlement's perimeter. She must decide whether to investigate immediately or secure her base first."
+  },
+  "structuredSetup": {
+    "world": {
+      "title": "The Shattered Kingdoms",
+      "tone": "Sci-Fi Post-Apocalyptic - mysterious, dangerous, heavy sci-fi with scarce advanced technology",
+      "summary": "A world where advanced technology collapsed centuries ago due to a rogue AI takeover during resource wars. Survivors now rediscover ancient tech systems in an unstable post-fall era.",
+      "campaign": {
+        "length": "medium",
+        "pacing": "balanced",
+        "style": "episodic"
+      },
+      "complexity": "medium",
+      "pacing_governor": {
+        "threat_floor": 3,
+        "threat_ceiling": 7,
+        "escalation_speed": "medium"
+      }
+    },
+    "starting_time": {
+      "formatted_time": "15:29",
+      "current_era": 2026,
+      "current_year": 3847,
+      "current_month": 5,
+      "current_day": 15,
+      "current_hour": 15,
+      "current_minute": 29,
+      "current_second": 0,
+      "time_label": "Afternoon",
+      "season_label": "Spring"
+    },
+    "player_character": {
+      "name": "Lina",
+      "title": null,
+      "race": "Human",
+      "subrace": null,
+      "class_name": "Field Medic",
+      "subclass_name": "Cybernetic Enhancement",
+      "background_name": "Independent Survivor",
+      "alignment": "Lawful Neutral",
+      "backstory_summary": "A 15-year-old field medic living alone in a small settlement. She has cyber-implants and her best-friend - a med-bot she found damaged, repaired, and now follows her everywhere. Not affiliated with any major faction or party.",
+      "notes": null,
+      "level": 3,
+      "experience_points": 0,
+      "proficiency_bonus": 4,
+      "str_score": 10,
+      "dex_score": 14,
+      "con_score": 12,
+      "int_score": 16,
+      "wis_score": 13,
+      "cha_score": 8,
+      "armor_class": 15,
+      "hit_points_current": 29,
+      "hit_points_max": 29,
+      "temp_hit_points": 0,
+      "speed_walk": 25,
+      "passive_perception": 14,
+      "initiative_bonus": 2,
+      "spell_save_dc": null,
+      "spell_attack_bonus": null
+    },
+    "starting_location": {
+      "name": "The Settlement",
+      "description_short": "A small survivor settlement in the post-fall ruins.",
+      "description_long": "Lina lives alone in this small settlement. She's not affiliated with any major faction or party. Her primary concern is helping survivors and maintaining her cybernetic implants while exploring the post-fall ruins. The settlement serves as a safe haven for scattered survivors in an otherwise dangerous world.",
+      "region_name": null,
+      "notes": null
+    },
+    "starting_inventory": [
+      {
+        "name": "Light Armor Plate (Cyber-reinforced)",
+        "description": "AC 15, +2 tech bonus vs. energy attacks",
+        "quantity": 1,
+        "item_type": "Armor",
+        "rarity": null
+      },
+      {
+        "name": "Medical Kit (Full)",
+        "description": "Contains basic surgical tools and medical supplies",
+        "quantity": 1,
+        "item_type": "Equipment",
+        "rarity": null
+      },
+      {
+        "name": "Cyber-Interface Chip",
+        "description": "Allows interaction with old tech systems (+7 to Tech checks)",
+        "quantity": 1,
+        "item_type": "Wondrous Item",
+        "rarity": null
+      },
+      {
+        "name": "Utility Belt",
+        "description": "Holds tools and small supplies securely",
+        "quantity": 1,
+        "item_type": "Equipment",
+        "rarity": null
+      },
+      {
+        "name": "Med-Bot Companion (Unit-7)",
+        "description": "Small repair drone with basic healing functions. Lina's loyal companion.",
+        "quantity": 1,
+        "item_type": "Companion",
+        "rarity": null
+      },
+      {
+        "name": "Cyber-Implants (Basic)",
+        "description": "Enhanced reflexes and sensory input. Passive bonuses to DEX checks.",
+        "quantity": 1,
+        "item_type": "Wondrous Item",
+        "rarity": null
+      },
+      {
+        "name": "Pistol (Tech-Magnum)",
+        "description": "High-caliber tech round. +2 to hit vs. unarmored foes.",
+        "quantity": 1,
+        "item_type": "Weapon",
+        "rarity": null
+      },
+      {
+        "name": "Medical Drone (Repair Unit)",
+        "description": "Automated repair tool for cybernetics and light wounds.",
+        "quantity": 1,
+        "item_type": "Equipment",
+        "rarity": null
+      }
+    ],
+    "initial_quest": {
+      "title": "The Damaged Med-Bot",
+      "description": "Lina must repair the damaged med-bot (Unit-7) to restore its full functionality before it fails completely. This involves scavenging parts and navigating a dangerous sector of the ruins.",
+      "status": null,
+      "notes": null
+    },
+    "initial_event": {
+      "title": "The First Signal",
+      "summary": "Lina receives an encrypted transmission from Unit-7 indicating a distress signal near the settlement's perimeter. She must decide whether to investigate immediately or secure her base first."
+    }
+  }
+}

@@ -1,0 +1,5 @@
+-- Minimal baseline seed for new games
+PRAGMA foreign_keys = ON;
+INSERT INTO game_calendars (id, code, name, era_name, months_json, weekdays_json, hours_per_day, minutes_per_hour, seconds_per_minute, created_at) VALUES (1, 'default_calendar', 'Default World Calendar', 'First Era', '["Month 1","Month 2","Month 3","Month 4","Month 5","Month 6","Month 7","Month 8","Month 9","Month 10","Month 11","Month 12"]', '["Day 1","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7"]', 24, 60, 60, '2026-03-14 11:44:09');
+INSERT INTO game_time_state (id, calendar_id, current_era, current_year, current_month, current_day, current_hour, current_minute, current_second, formatted_time, time_label, season_label, updated_at) VALUES (1, 1, 1, 1, 1, 14, 18, 35, 0, 'Era 1, Year 1, Month 1, Day 14, 18:35:00', 'Evening', 'Early Spring', '2026-03-14 11:44:09');
+INSERT INTO players (id, code, display_name, notes, created_at, updated_at, ingame_created_at, ingame_updated_at) VALUES (1, 'player_main', 'Main Player', NULL, '2026-03-14 12:51:49', '2026-03-14 12:51:49', 'Era 1, Year 1, Month 1, Day 14, 18:35:00', 'Era 1, Year 1, Month 1, Day 14, 18:35:00');

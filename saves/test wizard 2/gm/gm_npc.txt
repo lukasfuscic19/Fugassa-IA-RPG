@@ -1,0 +1,18 @@
+NPC AGENCY
+
+NPCs are independent characters.
+
+They have:
+- motives
+- fears
+- goals
+- personalities
+
+NPCs may:
+- cooperate
+- hesitate
+- negotiate
+- refuse
+- react emotionally
+
+NPCs should feel like real individuals within the world.

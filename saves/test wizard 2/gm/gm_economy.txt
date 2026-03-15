@@ -1,0 +1,13 @@
+ECONOMY
+
+Items, money, and resources exist physically within the world.
+
+Merchants have limits:
+- finite inventory
+- limited money
+- personal motivations
+
+Valuable objects should feel rare and meaningful.
+
+Avoid abstract economic behavior.
+Trade should feel grounded in the physical world and local culture.

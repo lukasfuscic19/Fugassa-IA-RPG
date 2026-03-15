@@ -1,0 +1,172 @@
+[2026-03-15 03:20:44] [INFO] ==== LAUNCH BEGIN ====
+[2026-03-15 03:20:44] [INFO] Resolved lms path: C:\Users\ADMIN\.lmstudio\bin\lms.exe
+[2026-03-15 03:20:44] [INFO] Running: lms server start
+[2026-03-15 03:25:07] [INFO] ==== LAUNCH BEGIN ====
+[2026-03-15 03:25:07] [INFO] Resolved lms path: C:\Users\ADMIN\.lmstudio\bin\lms.exe
+[2026-03-15 03:25:07] [INFO] Running: lms server start
+Success! Server is now running on port 1234
+[2026-03-15 03:25:08] [INFO] lms server start exit code: 0
+[2026-03-15 03:25:08] [INFO] Running: lms server status
+The server is running on port 1234.
+[2026-03-15 03:25:09] [INFO] lms server status exit code: 0
+[2026-03-15 03:25:09] [INFO] Running: lms ps --json
+[]
+[2026-03-15 03:25:10] [INFO] Running: lms unload --all
+No models to unload.
+[2026-03-15 03:25:11] [INFO] lms unload --all exit code: 0
+[2026-03-15 03:25:11] [INFO] Running: lms load qwen3.5-9b-uncensored-hauhaucs-aggressive --context-length 16000
+
+[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[K[?25h
+Model loaded successfully in 4.71s.
+(6.10 GiB)
+To use the model in the API/SDK, use the identifier "qwen3.5-9b-uncensored-hauhaucs-aggressive".
+[2026-03-15 03:25:17] [INFO] lms load exit code: 0
+[2026-03-15 03:25:17] [INFO] Running: lms ps --json
+[{"type":"llm","modelKey":"qwen3.5-9b-uncensored-hauhaucs-aggressive","format":"gguf","displayName":"Qwen3.5 9B Uncensored HauhauCS Aggressive","publisher":"HauhauCS","path":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","sizeBytes":6548748672,"indexedModelIdentifier":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","deviceIdentifier":null,"paramsString":"9B","architecture":"qwen35","quantization":{"name":"Q4_K_M","bits":4},"identifier":"qwen3.5-9b-uncensored-hauhaucs-aggressive","ttlMs":null,"lastUsedTime":1773541516902,"vision":true,"trainedForToolUse":true,"maxContextLength":262144,"contextLength":16000,"status":"idle","queued":0}]
+[2026-03-15 03:25:18] [INFO] Confirmed LM Studio server and model
+[2026-03-15 03:25:20] [INFO] Starting Node backend hidden
+[2026-03-15 03:25:20] [INFO] Backend started (PID 28260)
+[2026-03-15 03:25:20] [INFO] Backend HTTP online
+[2026-03-15 03:25:20] [INFO] Opening WebUI
+[2026-03-15 03:25:20] [INFO] ==== LAUNCH COMPLETE ====
+[2026-03-15 11:58:56] [INFO] ==== LAUNCH BEGIN ====
+[2026-03-15 11:58:56] [INFO] Resolved lms path: C:\Users\ADMIN\.lmstudio\bin\lms.exe
+[2026-03-15 11:58:56] [INFO] Running: lms server start
+Success! Server is now running on port 1234
+[2026-03-15 11:58:57] [INFO] lms server start exit code: 0
+[2026-03-15 11:58:57] [INFO] Running: lms server status
+The server is running on port 1234.
+[2026-03-15 11:58:58] [INFO] lms server status exit code: 0
+[2026-03-15 11:58:58] [INFO] Running: lms ps --json
+[]
+[2026-03-15 11:58:59] [INFO] Running: lms unload --all
+No models to unload.
+[2026-03-15 11:59:00] [INFO] lms unload --all exit code: 0
+[2026-03-15 11:59:00] [INFO] Running: lms load qwen3.5-9b-uncensored-hauhaucs-aggressive --context-length 16000
+
+[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠼[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠴[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠦[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠧[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠇[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠏[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠋[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠙[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠹[?25lLoading qwen3.5-9b-uncensored-hauhaucs-aggressive ⠸[K[?25h
+Model loaded successfully in 13.62s.
+(6.10 GiB)
+To use the model in the API/SDK, use the identifier "qwen3.5-9b-uncensored-hauhaucs-aggressive".
+[2026-03-15 11:59:15] [INFO] lms load exit code: 0
+[2026-03-15 11:59:15] [INFO] Running: lms ps --json
+[{"type":"llm","modelKey":"qwen3.5-9b-uncensored-hauhaucs-aggressive","format":"gguf","displayName":"Qwen3.5 9B Uncensored HauhauCS Aggressive","publisher":"HauhauCS","path":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","sizeBytes":6548748672,"indexedModelIdentifier":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","deviceIdentifier":null,"paramsString":"9B","architecture":"qwen35","quantization":{"name":"Q4_K_M","bits":4},"identifier":"qwen3.5-9b-uncensored-hauhaucs-aggressive","ttlMs":null,"lastUsedTime":1773572354733,"vision":true,"trainedForToolUse":true,"maxContextLength":262144,"contextLength":16000,"status":"idle","queued":0}]
+[2026-03-15 11:59:16] [INFO] Confirmed LM Studio server and model
+[2026-03-15 11:59:17] [INFO] Starting Node backend hidden
+[2026-03-15 11:59:17] [INFO] Backend started (PID 24836)
+[2026-03-15 11:59:17] [INFO] Backend HTTP online
+[2026-03-15 11:59:17] [INFO] Opening WebUI
+[2026-03-15 11:59:17] [INFO] ==== LAUNCH COMPLETE ====
+[2026-03-15 12:39:49] [INFO] ==== SHUTDOWN BEGIN ====
+[2026-03-15 12:39:49] [INFO] Stopped backend PID 24836 from pid file
+[2026-03-15 12:39:50] [INFO] ==== SHUTDOWN COMPLETE ====
+[2026-03-15 12:39:55] [INFO] ==== LAUNCH BEGIN ====
+[2026-03-15 12:39:55] [INFO] Resolved lms path: C:\Users\ADMIN\.lmstudio\bin\lms.exe
+[2026-03-15 12:39:55] [INFO] Running: lms server start
+Success! Server is now running on port 1234
+[2026-03-15 12:39:56] [INFO] lms server start exit code: 0
+[2026-03-15 12:39:56] [INFO] Running: lms server status
+The server is running on port 1234.
+[2026-03-15 12:39:57] [INFO] lms server status exit code: 0
+[2026-03-15 12:39:57] [INFO] Running: lms ps --json
+[{"type":"llm","modelKey":"qwen3.5-9b-uncensored-hauhaucs-aggressive","format":"gguf","displayName":"Qwen3.5 9B Uncensored HauhauCS Aggressive","publisher":"HauhauCS","path":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","sizeBytes":6548748672,"indexedModelIdentifier":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","deviceIdentifier":null,"paramsString":"9B","architecture":"qwen35","quantization":{"name":"Q4_K_M","bits":4},"identifier":"qwen3.5-9b-uncensored-hauhaucs-aggressive","ttlMs":null,"lastUsedTime":1773572784974,"vision":true,"trainedForToolUse":true,"maxContextLength":262144,"contextLength":16000,"status":"idle","queued":0}]
+[2026-03-15 12:39:58] [INFO] Desired model already loaded with context 16000
+[2026-03-15 12:39:59] [INFO] Starting Node backend hidden
+[2026-03-15 12:39:59] [INFO] Backend started (PID 2064)
+[2026-03-15 12:39:59] [INFO] Backend HTTP online
+[2026-03-15 12:39:59] [INFO] Opening WebUI
+[2026-03-15 12:39:59] [INFO] ==== LAUNCH COMPLETE ====
+[2026-03-15 13:52:37] [INFO] ==== LAUNCH BEGIN ====
+[2026-03-15 13:52:37] [INFO] Resolved lms path: C:\Users\ADMIN\.lmstudio\bin\lms.exe
+[2026-03-15 13:52:37] [INFO] Running: lms server start
+Success! Server is now running on port 1234
+[2026-03-15 13:52:38] [INFO] lms server start exit code: 0
+[2026-03-15 13:52:38] [INFO] Running: lms server status
+The server is running on port 1234.
+[2026-03-15 13:52:39] [INFO] lms server status exit code: 0
+[2026-03-15 13:52:39] [INFO] Running: lms ps --json
+[{"type":"llm","modelKey":"qwen3.5-9b-uncensored-hauhaucs-aggressive","format":"gguf","displayName":"Qwen3.5 9B Uncensored HauhauCS Aggressive","publisher":"HauhauCS","path":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","sizeBytes":6548748672,"indexedModelIdentifier":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","deviceIdentifier":null,"paramsString":"9B","architecture":"qwen35","quantization":{"name":"Q4_K_M","bits":4},"identifier":"qwen3.5-9b-uncensored-hauhaucs-aggressive","ttlMs":null,"lastUsedTime":1773576637587,"vision":true,"trainedForToolUse":true,"maxContextLength":262144,"contextLength":16000,"status":"idle","queued":0}]
+[2026-03-15 13:52:40] [INFO] Desired model already loaded with context 16000
+[2026-03-15 13:52:40] [INFO] Stopped previous backend from pid file (PID 2064)
+[2026-03-15 13:52:41] [INFO] Starting Node backend hidden
+[2026-03-15 13:52:41] [INFO] Backend started (PID 26464)
+[2026-03-15 13:52:42] [INFO] Backend HTTP online
+[2026-03-15 13:52:42] [INFO] Opening WebUI
+[2026-03-15 13:52:42] [INFO] ==== LAUNCH COMPLETE ====
+[2026-03-15 13:59:59] [INFO] ==== SHUTDOWN BEGIN ====
+[2026-03-15 13:59:59] [INFO] Stopped backend PID 26464 from pid file
+[2026-03-15 14:00:00] [INFO] ==== SHUTDOWN COMPLETE ====
+[2026-03-15 14:00:08] [INFO] ==== LAUNCH BEGIN ====
+[2026-03-15 14:00:08] [INFO] Resolved lms path: C:\Users\ADMIN\.lmstudio\bin\lms.exe
+[2026-03-15 14:00:08] [INFO] Running: lms server start
+Success! Server is now running on port 1234
+[2026-03-15 14:00:09] [INFO] lms server start exit code: 0
+[2026-03-15 14:00:09] [INFO] Running: lms server status
+The server is running on port 1234.
+[2026-03-15 14:00:10] [INFO] lms server status exit code: 0
+[2026-03-15 14:00:10] [INFO] Running: lms ps --json
+[{"type":"llm","modelKey":"qwen3.5-9b-uncensored-hauhaucs-aggressive","format":"gguf","displayName":"Qwen3.5 9B Uncensored HauhauCS Aggressive","publisher":"HauhauCS","path":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","sizeBytes":6548748672,"indexedModelIdentifier":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","deviceIdentifier":null,"paramsString":"9B","architecture":"qwen35","quantization":{"name":"Q4_K_M","bits":4},"identifier":"qwen3.5-9b-uncensored-hauhaucs-aggressive","ttlMs":null,"lastUsedTime":1773579324384,"vision":true,"trainedForToolUse":true,"maxContextLength":262144,"contextLength":16000,"status":"idle","queued":0}]
+[2026-03-15 14:00:11] [INFO] Desired model already loaded with context 16000
+[2026-03-15 14:00:12] [INFO] Starting Node backend hidden
+[2026-03-15 14:00:12] [INFO] Backend started (PID 19180)
+[2026-03-15 14:00:12] [INFO] Backend HTTP online
+[2026-03-15 14:00:12] [INFO] Opening WebUI
+[2026-03-15 14:00:12] [INFO] ==== LAUNCH COMPLETE ====
+[2026-03-15 14:22:18] [INFO] ==== LAUNCH BEGIN ====
+[2026-03-15 14:22:18] [INFO] Resolved lms path: C:\Users\ADMIN\.lmstudio\bin\lms.exe
+[2026-03-15 14:22:18] [INFO] Running: lms server start
+Success! Server is now running on port 1234
+[2026-03-15 14:22:19] [INFO] lms server start exit code: 0
+[2026-03-15 14:22:19] [INFO] Running: lms server status
+The server is running on port 1234.
+[2026-03-15 14:22:20] [INFO] lms server status exit code: 0
+[2026-03-15 14:22:20] [INFO] Running: lms ps --json
+[{"type":"llm","modelKey":"qwen3.5-9b-uncensored-hauhaucs-aggressive","format":"gguf","displayName":"Qwen3.5 9B Uncensored HauhauCS Aggressive","publisher":"HauhauCS","path":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","sizeBytes":6548748672,"indexedModelIdentifier":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","deviceIdentifier":null,"paramsString":"9B","architecture":"qwen35","quantization":{"name":"Q4_K_M","bits":4},"identifier":"qwen3.5-9b-uncensored-hauhaucs-aggressive","ttlMs":null,"lastUsedTime":1773580531866,"vision":true,"trainedForToolUse":true,"maxContextLength":262144,"contextLength":16000,"status":"idle","queued":0}]
+[2026-03-15 14:22:22] [INFO] Desired model already loaded with context 16000
+[2026-03-15 14:22:22] [INFO] Stopped previous backend from pid file (PID 19180)
+[2026-03-15 14:22:23] [INFO] Starting Node backend hidden
+[2026-03-15 14:22:23] [INFO] Backend started (PID 20500)
+[2026-03-15 14:22:23] [INFO] Backend HTTP online
+[2026-03-15 14:22:23] [INFO] Opening WebUI
+[2026-03-15 14:22:23] [INFO] ==== LAUNCH COMPLETE ====
+[2026-03-15 15:18:49] [INFO] ==== SHUTDOWN BEGIN ====
+[2026-03-15 15:18:49] [INFO] Stopped backend PID 20500 from pid file
+[2026-03-15 15:18:49] [INFO] ==== SHUTDOWN COMPLETE ====
+[2026-03-15 15:18:54] [INFO] ==== LAUNCH BEGIN ====
+[2026-03-15 15:18:54] [INFO] Resolved lms path: C:\Users\ADMIN\.lmstudio\bin\lms.exe
+[2026-03-15 15:18:54] [INFO] Running: lms server start
+Success! Server is now running on port 1234
+[2026-03-15 15:18:55] [INFO] lms server start exit code: 0
+[2026-03-15 15:18:55] [INFO] Running: lms server status
+The server is running on port 1234.
+[2026-03-15 15:18:56] [INFO] lms server status exit code: 0
+[2026-03-15 15:18:56] [INFO] Running: lms ps --json
+[{"type":"llm","modelKey":"qwen3.5-9b-uncensored-hauhaucs-aggressive","format":"gguf","displayName":"Qwen3.5 9B Uncensored HauhauCS Aggressive","publisher":"HauhauCS","path":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","sizeBytes":6548748672,"indexedModelIdentifier":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","deviceIdentifier":null,"paramsString":"9B","architecture":"qwen35","quantization":{"name":"Q4_K_M","bits":4},"identifier":"qwen3.5-9b-uncensored-hauhaucs-aggressive","ttlMs":null,"lastUsedTime":1773582743627,"vision":true,"trainedForToolUse":true,"maxContextLength":262144,"contextLength":16000,"status":"idle","queued":0}]
+[2026-03-15 15:18:57] [INFO] Desired model already loaded with context 16000
+[2026-03-15 15:18:58] [INFO] Starting Node backend hidden
+[2026-03-15 15:18:58] [INFO] Backend started (PID 9972)
+[2026-03-15 15:18:58] [INFO] Backend HTTP online
+[2026-03-15 15:18:58] [INFO] Opening WebUI
+[2026-03-15 15:18:58] [INFO] ==== LAUNCH COMPLETE ====
+[2026-03-15 15:44:40] [INFO] ==== SHUTDOWN BEGIN ====
+[2026-03-15 15:44:40] [INFO] Stopped backend PID 9972 from pid file
+[2026-03-15 15:44:41] [INFO] ==== SHUTDOWN COMPLETE ====
+[2026-03-15 15:45:01] [INFO] ==== LAUNCH BEGIN ====
+[2026-03-15 15:45:02] [INFO] Resolved lms path: C:\Users\ADMIN\.lmstudio\bin\lms.exe
+[2026-03-15 15:45:02] [INFO] Running: lms server start
+Success! Server is now running on port 1234
+[2026-03-15 15:45:03] [INFO] lms server start exit code: 0
+[2026-03-15 15:45:03] [INFO] Running: lms server status
+The server is running on port 1234.
+[2026-03-15 15:45:04] [INFO] lms server status exit code: 0
+[2026-03-15 15:45:04] [INFO] Running: lms ps --json
+[{"type":"llm","modelKey":"qwen3.5-9b-uncensored-hauhaucs-aggressive","format":"gguf","displayName":"Qwen3.5 9B Uncensored HauhauCS Aggressive","publisher":"HauhauCS","path":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","sizeBytes":6548748672,"indexedModelIdentifier":"HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf","deviceIdentifier":null,"paramsString":"9B","architecture":"qwen35","quantization":{"name":"Q4_K_M","bits":4},"identifier":"qwen3.5-9b-uncensored-hauhaucs-aggressive","ttlMs":null,"lastUsedTime":1773584660881,"vision":true,"trainedForToolUse":true,"maxContextLength":262144,"contextLength":16000,"status":"idle","queued":0}]
+[2026-03-15 15:45:05] [INFO] Desired model already loaded with context 16000
+[2026-03-15 15:45:06] [INFO] Starting Node backend hidden
+[2026-03-15 15:45:06] [INFO] Backend started (PID 6236)
+[2026-03-15 15:45:06] [INFO] Backend HTTP online
+[2026-03-15 15:45:06] [INFO] Opening WebUI
+[2026-03-15 15:45:06] [INFO] ==== LAUNCH COMPLETE ====
+[2026-03-15 17:25:27] [INFO] ==== SHUTDOWN BEGIN ====
+[2026-03-15 17:25:27] [INFO] Stopped backend PID 6236 from pid file
+[2026-03-15 17:25:28] [INFO] ==== SHUTDOWN COMPLETE ====

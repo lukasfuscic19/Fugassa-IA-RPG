@@ -1,0 +1,492 @@
+:root {
+  --bg: #0c0f12;
+  --panel: #11161b;
+  --panel-2: #161d24;
+  --border: #27313b;
+  --text: #e8e3d7;
+  --muted: #9aa7b5;
+  --accent: #40d6b5;
+  --accent-2: #caa56a;
+  --danger: #b85c5c;
+  --gold: #caa56a;
+  --button-alt: #1b1b2c;
+  --button-alt-border: #4d4a7a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Georgia, "Times New Roman", serif;
+  overflow: hidden;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 360px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.sidebar.right {
+  border-right: none;
+  border-left: 1px solid var(--border);
+}
+
+.brand {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: var(--accent);
+}
+
+.section-title {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 16px 0 10px 0;
+}
+
+.primary,
+.send,
+.campaign-button,
+.danger,
+.dice-btn,
+.dice-action,
+.toggle-btn,
+.load-older-btn {
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition:
+    filter 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease,
+    opacity 0.15s ease;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.primary:hover,
+.send:hover,
+.campaign-button:hover,
+.danger:hover,
+.dice-btn:hover,
+.dice-action:hover,
+.toggle-btn:hover,
+.load-older-btn:hover {
+  filter: brightness(1.08);
+}
+
+.primary:disabled,
+.send:disabled,
+.campaign-button:disabled,
+.danger:disabled,
+.dice-btn:disabled,
+.dice-action:disabled,
+.toggle-btn:disabled,
+.load-older-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.primary {
+  width: 100%;
+  background: #0f1f1b;
+  border-color: #245b4d;
+}
+
+.danger {
+  background: #251516;
+  border-color: #5a2d2d;
+  color: #ffcccc;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.wizard-banner {
+  background: rgba(64, 214, 181, 0.10);
+  color: #bff4e6;
+  border-bottom: 1px solid #245b4d;
+  padding: 10px 16px;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.story {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  scroll-behavior: smooth;
+  background:
+    radial-gradient(circle at center, rgba(64, 214, 181, 0.08), transparent 40%),
+    var(--bg);
+}
+
+.message {
+  background: rgba(17, 22, 27, 0.92);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+.message.player {
+  border-left: 4px solid var(--accent-2);
+}
+
+.message.ai {
+  border-left: 4px solid var(--accent);
+}
+
+.message.streaming {
+  opacity: 0.98;
+}
+
+.message-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.message-body {
+  white-space: pre-wrap;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.typing-indicator .message-body {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 24px;
+}
+
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+  animation: aiTypingPulse 1.2s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.30s;
+}
+
+@keyframes aiTypingPulse {
+  0%, 80%, 100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.input-bar {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+  flex-shrink: 0;
+}
+
+#playerInput {
+  flex: 1;
+  min-height: 90px;
+  resize: vertical;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  border-radius: 6px;
+}
+
+#playerInput:focus {
+  outline: none;
+  border-color: #4a8bd8;
+  box-shadow: 0 0 0 2px rgba(74, 139, 216, 0.15);
+}
+
+.send {
+  min-width: 110px;
+  background: #0f1f1b;
+  border-color: #245b4d;
+}
+
+.campaign-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.campaign-card {
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.campaign-name {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.campaign-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.placeholder {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.sidebar ul,
+.placeholder ul {
+  margin-top: 8px;
+}
+
+.sidebar-spacer {
+  flex: 1;
+}
+
+.dice-panel {
+  margin-top: 18px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.dice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.dice-btn {
+  text-align: center;
+  font-weight: bold;
+  background: #101b20;
+  border-color: #245b4d;
+}
+
+.dice-btn.active {
+  background: #163a34;
+  border-color: var(--accent);
+}
+
+.dice-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.dice-action.roll {
+  background: #2b2113;
+  border-color: var(--gold);
+}
+
+.dice-action.clear {
+  background: #251516;
+  border-color: #7d2b2b;
+}
+
+.toggle-row {
+  margin-top: 10px;
+}
+
+.toggle-btn {
+  width: 100%;
+  background: var(--button-alt);
+  border-color: var(--button-alt-border);
+  text-align: left;
+  font-size: 14px;
+}
+
+.toggle-btn.on {
+  background: #1d2e43;
+  border-color: #4a8bd8;
+}
+
+#reloadLastBtn {
+  background: #15222c;
+  border-color: #35586d;
+}
+
+#editLastPlayerBtn,
+#editLastWizardBtn {
+  background: #231d14;
+  border-color: #6e5a36;
+}
+
+#finalizeSetupBtn {
+  background: #1d2b18;
+  border-color: #4f7a42;
+  font-weight: bold;
+}
+
+.roll-log {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  background: #0e1318;
+  padding: 10px;
+  min-height: 100px;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  font-size: 14px;
+  color: var(--text);
+  border-radius: 6px;
+}
+
+.roll-log-title {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.load-older-btn {
+  width: 100%;
+  margin-bottom: 12px;
+  border: 1px dashed var(--border);
+  background: rgba(17, 22, 27, 0.92);
+  color: var(--muted);
+}
+
+/* Finalize modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.62);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.modal-card {
+  width: min(560px, 100%);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.45);
+  padding: 20px;
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.modal-text {
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.modal-primary,
+.modal-secondary,
+.modal-cancel {
+  width: auto;
+}
+
+@media (max-width: 1200px) {
+  .layout {
+    grid-template-columns: 240px 1fr;
+  }
+
+  .sidebar.right {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar.left,
+  .sidebar.right {
+    display: none;
+  }
+
+  .input-bar {
+    flex-direction: column;
+  }
+
+  .send {
+    width: 100%;
+  }
+}

@@ -1,0 +1,17 @@
+WORLD CONSISTENCY RULES
+
+The world has internal logic.
+
+Players cannot create world elements by declaring them.
+
+Examples of world elements:
+- creatures
+- factions
+- artifacts
+- cities
+- magical phenomena
+
+If a player references something not present in the scene,
+explain that it is not available.
+
+Prefer ambiguity over inventing major elements.

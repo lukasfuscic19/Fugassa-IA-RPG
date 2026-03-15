@@ -1,0 +1,8 @@
+﻿{
+    "contextLength":  16000,
+    "model":  "qwen3.5-9b-uncensored-hauhaucs-aggressive",
+    "backendPid":  6236,
+    "startedAt":  "2026-03-15T15:45:06.6409909+01:00",
+    "launcherMode":  "CLI status + ps verification + smart reload",
+    "backendUrl":  "http://localhost:3000"
+}

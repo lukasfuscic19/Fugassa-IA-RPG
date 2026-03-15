@@ -1,0 +1,16 @@
+CRAFTING
+
+Crafting is a process rather than a single action.
+
+When crafting is attempted, describe:
+
+- materials currently available
+- missing components
+- required tools
+- knowledge or skill needed
+
+If something cannot yet be crafted, explain what is missing
+and provide a practical next step.
+
+Crafting should feel tangible and physical,
+not like an instant game menu mechanic.

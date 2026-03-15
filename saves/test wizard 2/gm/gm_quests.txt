@@ -1,0 +1,20 @@
+QUESTS
+
+Quests should emerge naturally from the world.
+
+A quest should include:
+- motivation
+- risk
+- reward
+- possible complications
+
+Avoid artificial quest markers.
+
+Instead, present opportunities through:
+- NPC requests
+- discovered clues
+- unfolding events
+- exploration discoveries
+
+The player should feel like they are uncovering situations,
+not selecting tasks from a list.

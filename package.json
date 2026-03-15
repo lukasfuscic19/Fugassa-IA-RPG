@@ -1,0 +1,14 @@
+{
+  "name": "ai-rpg-webui",
+  "version": "0.2.0",
+  "description": "Local AI RPG WebUI using LM Studio + SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "launcher": "node launcher.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "express": "^4.22.1"
+  }
+}
