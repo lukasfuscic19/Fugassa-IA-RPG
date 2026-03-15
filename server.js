@@ -22,12 +22,12 @@ const {
 } = require("./saveManager");
 const { buildWorldContext } = require("./dbEngine");
 const { bootstrapWorldChangeLog, applyWorldChanges, revertWorldChanges } = require("./dbWriteEngine");
+
 const {
   getDefaultSetupDraft,
   ensureWizardMessageArray,
   ensureWizardMeta,
   ensureWizardState,
-  buildWizardTranscript,
   getLastWizardPairInfo,
   overviewIntent,
   explicitFinalizeIntent,
@@ -42,7 +42,9 @@ const {
   buildWizardTransitionMessage,
   buildStageSystemPrompt,
   buildStageUserPrompt,
-  buildSetupOverviewText
+  buildSetupOverviewText,
+  mergePlayerInputIntoStructured,
+  fillStageDefaults
 } = require("./engine/wizardEngine");
 
 const app = express();
@@ -526,209 +528,422 @@ async function callLmStudio(messages, maxTokens = MAX_OUTPUT_TOKENS, temperature
   return data.choices?.[0]?.message?.content || "";
 }
 
-// -------------------- Wizard helpers --------------------
+// -------------------- Wizard + setup helpers --------------------
+
+const {
+  getDefaultSetupDraft,
+  ensureWizardMessageArray,
+  ensureWizardMeta,
+  ensureWizardState,
+  overviewIntent,
+  explicitFinalizeIntent,
+  likelyFinalizeIntent,
+  detectAutoFillIntent,
+  getCurrentWizardStage,
+  assessSetupCompleteness,
+  setWizardStage,
+  canFinalizeSetup,
+  buildWizardOpeningMessage,
+  buildWizardTransitionMessage,
+  buildStageSystemPrompt,
+  buildStageUserPrompt,
+  buildSetupOverviewText,
+  mergePlayerInputIntoStructured,
+  fillStageDefaults
+} = require("./engine/wizardEngine");
 
 function appendWizardMessage(saveName, role, content) {
   const draft = readSetupDraft(saveName) || getDefaultSetupDraft();
   ensureWizardMessageArray(draft).push({ role, content, createdAt: new Date().toISOString() });
   ensureWizardMeta(draft);
-  ensureWizardState(draft);
   writeSetupDraft(saveName, draft);
   return draft;
 }
 
-function applyStructuredSetupToDraft(draft, structured) {
-  if (!draft || !structured || typeof structured !== "object") return draft;
-  draft.world = structured.world || draft.world || {};
-  draft.character = structured.player_character || draft.character || {};
-  draft.inventory = Array.isArray(structured.starting_inventory) ? structured.starting_inventory : (draft.inventory || []);
-  draft.startingLocation = structured.starting_location || draft.startingLocation || {};
-  draft.startingTime = structured.starting_time || draft.startingTime || {};
-  draft.initialQuest = structured.initial_quest || draft.initialQuest || {};
-  draft.initialEvent = structured.initial_event || draft.initialEvent || {};
-  draft.structuredSetup = structured;
-  return draft;
+function makeCode(prefix) {
+  return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
-async function extractSetupSeed(draft, debugMeta = {}) {
-  const systemPrompt = `
-You convert an RPG campaign setup conversation into structured seed data for a database.
-
-Return ONLY valid JSON.
-No markdown.
-No explanation.
-
-Use the final settled campaign concept from the conversation.
-If the player told the assistant to choose the rest, fill all missing details yourself.
-Do not ask more questions. Produce the completed setup state.
-
-Required JSON schema:
-{
-  "world": {
-    "title": string,
-    "tone": string,
-    "summary": string,
-    "campaign": {
-      "length": string,
-      "pacing": string,
-      "style": string
-    },
-    "complexity": string,
-    "pacing_governor": {
-      "threat_floor": number,
-      "threat_ceiling": number,
-      "escalation_speed": string
-    }
-  },
-  "starting_time": {
-    "formatted_time": string,
-    "current_era": number,
-    "current_year": number,
-    "current_month": number,
-    "current_day": number,
-    "current_hour": number,
-    "current_minute": number,
-    "current_second": number,
-    "time_label": string,
-    "season_label": string
-  },
-  "player_character": {
-    "name": string,
-    "title": string|null,
-    "race": string,
-    "subrace": string|null,
-    "class_name": string,
-    "subclass_name": string|null,
-    "background_name": string,
-    "alignment": string|null,
-    "backstory_summary": string,
-    "notes": string|null,
-    "level": number,
-    "experience_points": number,
-    "proficiency_bonus": number,
-    "str_score": number,
-    "dex_score": number,
-    "con_score": number,
-    "int_score": number,
-    "wis_score": number,
-    "cha_score": number,
-    "armor_class": number,
-    "hit_points_current": number,
-    "hit_points_max": number,
-    "temp_hit_points": number,
-    "speed_walk": number,
-    "passive_perception": number,
-    "initiative_bonus": number,
-    "spell_save_dc": number|null,
-    "spell_attack_bonus": number|null
-  },
-  "starting_location": {
-    "name": string,
-    "description_short": string,
-    "description_long": string,
-    "region_name": string|null,
-    "notes": string|null
-  },
-  "starting_inventory": [
-    {
-      "name": string,
-      "description": string|null,
-      "quantity": number,
-      "item_type": string|null,
-      "rarity": string|null
-    }
-  ],
-  "initial_quest": {
-    "title": string,
-    "description": string,
-    "status": string|null,
-    "notes": string|null
-  },
-  "initial_event": {
-    "title": string,
-    "summary": string
-  }
-}
-
-Rules:
-- Every required object must be present.
-- Build a full playable DnD-style character sheet even if the conversation only gives the concept.
-- Do not leave the character sheet empty.
-- starting_inventory may be empty only if the setup clearly gives no gear, otherwise infer a plausible starter kit.
-- starting_time must never be empty.
-- campaign.length should be one of: short, medium, long, epic, endless.
-- campaign.pacing should be one of: slow, balanced, fast.
-- campaign.style should be one of: story, sandbox, episodic, mixed.
-- complexity should be one of: low, medium, high, simulation.
-- pacing_governor.escalation_speed should be one of: slow, medium, fast.
-- If the player explicitly asked for a slow start, slice of life, or exploration-heavy game, reflect that in campaign and pacing_governor.
-- Keep ability scores and combat stats plausible for a level 1-5 adventurer unless the setup clearly implies something else.
-- Use concise but specific prose.
-- Do not include any fields outside the schema.
-`.trim();
-
-  const userPrompt = `
-SETUP DRAFT JSON:
-${JSON.stringify(draft || {}, null, 2)}
-
-SETUP CHAT TRANSCRIPT:
-${buildWizardTranscript(draft) || "No setup chat available."}
-
-Extract the final settled campaign state into the required JSON schema.
-`.trim();
-
-  let raw = await callLmStudio([
-    { role: "system", content: systemPrompt },
-    { role: "user", content: userPrompt }
-  ], 2600, 0.2, debugMeta);
-
-  let parsed = extractFirstJsonObject(raw);
-  if (parsed && typeof parsed === "object") return parsed;
-
-  const repairPrompt = `
-Convert the following text into valid JSON matching the previously requested schema.
-Return ONLY valid JSON.
-
-TEXT:
-${raw}
-`.trim();
-
-  raw = await callLmStudio([
-    { role: "system", content: "You are a JSON repair assistant. Return only valid JSON." },
-    { role: "user", content: repairPrompt }
-  ], 2600, 0.1, { ...debugMeta, flow: `${debugMeta.flow || "setup"}_json_repair` });
-
-  parsed = extractFirstJsonObject(raw);
-  return parsed;
-}
-
-async function refreshStructuredSetupDraft(saveName, requestId = null) {
-  const draft = readSetupDraft(saveName) || getDefaultSetupDraft();
-  ensureWizardMeta(draft);
-  ensureWizardState(draft);
-
-  if (!Array.isArray(draft.wizardMessages) || draft.wizardMessages.length < 2) {
-    writeSetupDraft(saveName, draft);
-    return draft;
-  }
-
+function tableExists(db, tableName) {
   try {
-    const structured = await extractSetupSeed(draft, {
-      saveName,
-      requestId,
-      flow: "setup_structured_refresh"
-    });
-    if (structured && typeof structured === "object") {
-      applyStructuredSetupToDraft(draft, structured);
-      writeSetupDraft(saveName, draft);
-    }
-  } catch {}
-
-  return draft;
+    const row = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name = ?").get(tableName);
+    return !!row;
+  } catch {
+    return false;
+  }
 }
 
-// -------------------- Dynamic prompt builder --------------------
-// -------------------- Dynamic prompt builder --------------------
+function getColumns(db, tableName) {
+  try {
+    return db.prepare(`PRAGMA table_info(${tableName})`).all().map(c => c.name);
+  } catch {
+    return [];
+  }
+}
+
+function safeRun(db, sql, params = []) {
+  try {
+    return db.prepare(sql).run(...params);
+  } catch {
+    return null;
+  }
+}
+
+function safeGet(db, sql, params = []) {
+  try {
+    return db.prepare(sql).get(...params);
+  } catch {
+    return null;
+  }
+}
+
+function clearCampaignWorld(db) {
+  const statements = [
+    `DELETE FROM world_change_log`,
+    `DELETE FROM turn_history`,
+    `DELETE FROM scene_summaries`,
+    `DELETE FROM item_ownership_log`,
+    `DELETE FROM player_character_inventory`,
+    `DELETE FROM npc_inventory`,
+    `DELETE FROM npc_memories`,
+    `DELETE FROM npc_relationships`,
+    `DELETE FROM npc_goals`,
+    `DELETE FROM npc_skills`,
+    `DELETE FROM npc_spellbooks`,
+    `DELETE FROM npc_stats`,
+    `DELETE FROM npc_traits`,
+    `DELETE FROM quests`,
+    `DELETE FROM event_log`,
+    `DELETE FROM visited_locations`,
+    `DELETE FROM location_connections`,
+    `DELETE FROM location_state_flags`,
+    `DELETE FROM assets`,
+    `DELETE FROM npcs`,
+    `DELETE FROM items`,
+    `DELETE FROM player_characters`,
+    `DELETE FROM locations`,
+    `DELETE FROM campaign_settings`,
+    `DELETE FROM story_arcs`
+  ];
+  for (const sql of statements) {
+    try { db.prepare(sql).run(); } catch {}
+  }
+}
+
+function ensureMainPlayerRecord(db, ingameTime) {
+  const existing = safeGet(db, `SELECT * FROM players ORDER BY id ASC LIMIT 1`);
+  if (existing?.id) return existing.id;
+  const info = safeRun(db, `
+    INSERT INTO players (code, display_name, notes, ingame_created_at, ingame_updated_at)
+    VALUES (?, ?, ?, ?, ?)
+  `, [makeCode("player"), "Main Player", null, ingameTime || null, ingameTime || null]);
+  return info?.lastInsertRowid || 1;
+}
+
+function ensureCalendarAndTime(db, startingTime = {}) {
+  let calendar = safeGet(db, `SELECT * FROM game_calendars ORDER BY id ASC LIMIT 1`);
+  if (!calendar && tableExists(db, "game_calendars")) {
+    const info = safeRun(db, `
+      INSERT INTO game_calendars (code, name, era_name, months_json, weekdays_json, hours_per_day, minutes_per_hour, seconds_per_minute)
+      VALUES (?, ?, ?, ?, ?, 24, 60, 60)
+    `, [
+      makeCode("cal"),
+      "Default Calendar",
+      "Era",
+      JSON.stringify(["Month 1","Month 2","Month 3","Month 4","Month 5","Month 6","Month 7","Month 8","Month 9","Month 10","Month 11","Month 12"]),
+      JSON.stringify(["Day 1","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7"])
+    ]);
+    calendar = safeGet(db, `SELECT * FROM game_calendars WHERE id = ?`, [info?.lastInsertRowid]);
+  }
+
+  let row = safeGet(db, `SELECT * FROM game_time_state ORDER BY id ASC LIMIT 1`);
+  const data = {
+    current_era: Number(startingTime.current_era) || 1,
+    current_year: Number(startingTime.current_year) || 1,
+    current_month: Number(startingTime.current_month) || 1,
+    current_day: Number(startingTime.current_day) || 14,
+    current_hour: Number(startingTime.current_hour) || 10,
+    current_minute: Number(startingTime.current_minute) || 0,
+    current_second: Number(startingTime.current_second) || 0,
+    formatted_time: startingTime.formatted_time || `Era 1, Year 1, Month 1, Day 14, 10:00:00`,
+    time_label: startingTime.time_label || "Morning",
+    season_label: startingTime.season_label || "Spring"
+  };
+
+  if (!row && tableExists(db, "game_time_state")) {
+    safeRun(db, `
+      INSERT INTO game_time_state (
+        calendar_id, current_era, current_year, current_month, current_day, current_hour, current_minute, current_second,
+        formatted_time, time_label, season_label
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [
+      calendar?.id || 1,
+      data.current_era, data.current_year, data.current_month, data.current_day,
+      data.current_hour, data.current_minute, data.current_second,
+      data.formatted_time, data.time_label, data.season_label
+    ]);
+  } else if (row) {
+    safeRun(db, `
+      UPDATE game_time_state
+      SET current_era = ?, current_year = ?, current_month = ?, current_day = ?, current_hour = ?, current_minute = ?, current_second = ?,
+          formatted_time = ?, time_label = ?, season_label = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `, [
+      data.current_era, data.current_year, data.current_month, data.current_day,
+      data.current_hour, data.current_minute, data.current_second,
+      data.formatted_time, data.time_label, data.season_label, row.id
+    ]);
+  }
+
+  return data.formatted_time;
+}
+
+function insertSetupLocation(db, location, world, ingameTime) {
+  const info = safeRun(db, `
+    INSERT INTO locations (
+      code, name, description_short, description_long, region_name, is_discovered, notes,
+      ingame_created_at, ingame_updated_at
+    ) VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)
+  `, [
+    makeCode("loc"),
+    String(location?.name || "Starting Location").trim(),
+    String(location?.description_short || location?.description_long || "Starting location").trim(),
+    String(location?.description_long || location?.description_short || location?.notes || "Starting location").trim(),
+    location?.region_name ? String(location.region_name).trim() : null,
+    location?.notes ? String(location.notes).trim() : (world?.tone ? `World tone: ${world.tone}` : null),
+    ingameTime || null,
+    ingameTime || null
+  ]);
+  return info?.lastInsertRowid || null;
+}
+
+function insertSetupPlayerCharacter(db, playerId, locationId, pc, ingameTime) {
+  const info = safeRun(db, `
+    INSERT INTO player_characters (
+      code, player_id, name, title, race, subrace, class_name, subclass_name, background_name, alignment,
+      level, experience_points, proficiency_bonus, str_score, dex_score, con_score, int_score, wis_score, cha_score,
+      armor_class, hit_points_current, hit_points_max, temp_hit_points, speed_walk, passive_perception, initiative_bonus,
+      spell_save_dc, spell_attack_bonus, current_location_id, backstory_summary, notes, status, ingame_created_at, ingame_updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `, [
+    makeCode("pc"),
+    playerId,
+    pc.name || "Unnamed",
+    pc.title || null,
+    pc.race || "Human",
+    pc.subrace || null,
+    pc.class_name || "Adventurer",
+    pc.subclass_name || null,
+    pc.background_name || "Survivor",
+    pc.alignment || null,
+    Number(pc.level) || 1,
+    Number(pc.experience_points) || 0,
+    Number(pc.proficiency_bonus) || 2,
+    Number(pc.str_score) || 10,
+    Number(pc.dex_score) || 10,
+    Number(pc.con_score) || 10,
+    Number(pc.int_score) || 10,
+    Number(pc.wis_score) || 10,
+    Number(pc.cha_score) || 10,
+    Number(pc.armor_class) || 10,
+    Number(pc.hit_points_current) || 10,
+    Number(pc.hit_points_max) || 10,
+    Number(pc.temp_hit_points) || 0,
+    Number(pc.speed_walk) || 30,
+    Number(pc.passive_perception) || 10,
+    Number(pc.initiative_bonus) || 0,
+    pc.spell_save_dc != null ? Number(pc.spell_save_dc) : null,
+    pc.spell_attack_bonus != null ? Number(pc.spell_attack_bonus) : null,
+    locationId,
+    pc.backstory_summary || null,
+    pc.notes || null,
+    pc.status || "active",
+    ingameTime || null,
+    ingameTime || null
+  ]);
+  return info?.lastInsertRowid || null;
+}
+
+function insertSetupInventory(db, playerCharacterId, items, ingameTime) {
+  if (!Array.isArray(items)) return;
+  for (const item of items) {
+    const itemInfo = safeRun(db, `
+      INSERT INTO items (code, name, item_type, rarity, weight, value_gp, description, stackable, ingame_created_at, ingame_updated_at)
+      VALUES (?, ?, ?, ?, 0, 0, ?, 1, ?, ?)
+    `, [
+      makeCode("item"),
+      item.name || "Item",
+      item.item_type || "gear",
+      item.rarity || null,
+      item.description || null,
+      ingameTime || null,
+      ingameTime || null
+    ]);
+    const itemId = itemInfo?.lastInsertRowid;
+    if (!itemId) continue;
+    safeRun(db, `
+      INSERT INTO player_character_inventory (
+        player_character_id, item_id, quantity, is_equipped, slot, notes, acquired_ingame_at, ingame_created_at, ingame_updated_at
+      ) VALUES (?, ?, ?, 0, NULL, NULL, ?, ?, ?)
+    `, [
+      playerCharacterId,
+      itemId,
+      Math.max(1, Number(item.quantity) || 1),
+      ingameTime || null,
+      ingameTime || null,
+      ingameTime || null
+    ]);
+  }
+}
+
+function insertSetupQuest(db, playerCharacterId, locationId, quest, ingameTime) {
+  if (!quest || !quest.title) return null;
+  const info = safeRun(db, `
+    INSERT INTO quests (
+      code, title, description, status, related_location_id, notes, ingame_created_at, ingame_updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `, [
+    makeCode("quest"),
+    quest.title,
+    quest.description || quest.summary || null,
+    quest.status || "active",
+    locationId || null,
+    quest.notes || null,
+    ingameTime || null,
+    ingameTime || null
+  ]);
+  return info?.lastInsertRowid || null;
+}
+
+function insertSetupEvent(db, playerCharacterId, locationId, event, ingameTime) {
+  if (!event || !event.title) return null;
+  const info = safeRun(db, `
+    INSERT INTO event_log (
+      code, event_type, title, summary, actor_type, actor_id, location_id, ingame_occurred_at, is_active
+    ) VALUES (?, ?, ?, ?, 'player_character', ?, ?, ?, 1)
+  `, [
+    makeCode("evt"),
+    event.event_type || "story",
+    event.title,
+    event.summary || "A new chapter begins.",
+    playerCharacterId || null,
+    locationId || null,
+    ingameTime || null
+  ]);
+  return info?.lastInsertRowid || null;
+}
+
+function upsertCampaignSettings(db, world) {
+  if (!tableExists(db, "campaign_settings")) return;
+  const campaign = world?.campaign || {};
+  const governor = world?.pacing_governor || {};
+  safeRun(db, `DELETE FROM campaign_settings`, []);
+  safeRun(db, `
+    INSERT INTO campaign_settings (
+      code, campaign_length, campaign_pacing, campaign_style, world_complexity, narrative_focus,
+      threat_floor, threat_ceiling, escalation_speed, notes
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `, [
+    makeCode("camp"),
+    campaign.length || "long",
+    campaign.pacing || "balanced",
+    campaign.style || "mixed",
+    world?.complexity || "medium",
+    world?.narrative_focus || "mixed",
+    Number(governor.threat_floor) || 1,
+    Number(governor.threat_ceiling) || 5,
+    governor.escalation_speed || "medium",
+    world?.summary || null
+  ]);
+}
+
+function replaceStoryArcs(db, arcs, locationId, ingameTime) {
+  if (!tableExists(db, "story_arcs")) return;
+  safeRun(db, `DELETE FROM story_arcs`, []);
+  for (const arc of Array.isArray(arcs) ? arcs : []) {
+    safeRun(db, `
+      INSERT INTO story_arcs (
+        code, title, arc_type, status, stage, stages_total, progress, threat_level,
+        related_location_id, summary, notes, ingame_created_at, ingame_updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [
+      arc.code || makeCode("arc"),
+      arc.title || "Story Arc",
+      arc.arc_type || "local",
+      arc.status || "active",
+      Number(arc.stage) || 1,
+      Number(arc.stages_total) || 4,
+      Number(arc.progress) || 0,
+      Number(arc.threat_level) || 1,
+      locationId || null,
+      arc.summary || null,
+      arc.notes || null,
+      ingameTime || null,
+      ingameTime || null
+    ]);
+  }
+}
+
+async function applySetupDraftToDatabase(db, saveName, draft) {
+  const structured = draft?.structuredSetup || {};
+  const world = structured.world || {};
+  const playerCharacter = structured.player_character || {};
+  const location = structured.starting_location || {};
+  const inventory = structured.starting_inventory || [];
+  const startingTime = structured.starting_time || {};
+  const initialQuest = structured.initial_quest || {};
+  const initialEvent = structured.initial_event || {};
+  const storyArcs = structured.story_arcs || [];
+
+  clearCampaignWorld(db);
+  const ingameTime = ensureCalendarAndTime(db, startingTime);
+  const playerId = ensureMainPlayerRecord(db, ingameTime);
+  const locationId = insertSetupLocation(db, location, world, ingameTime);
+  const playerCharacterId = insertSetupPlayerCharacter(db, playerId, locationId, playerCharacter, ingameTime);
+
+  if (locationId && playerCharacterId && tableExists(db, "visited_locations")) {
+    safeRun(db, `
+      INSERT INTO visited_locations (
+        player_character_id, location_id, first_visited_ingame_at, last_visited_ingame_at, discovery_method, notes
+      ) VALUES (?, ?, ?, ?, ?, ?)
+    `, [playerCharacterId, locationId, ingameTime, ingameTime, "campaign_start", "Starting location"]);
+  }
+
+  insertSetupInventory(db, playerCharacterId, inventory, ingameTime);
+  const questId = insertSetupQuest(db, playerCharacterId, locationId, initialQuest, ingameTime);
+  insertSetupEvent(db, playerCharacterId, locationId, initialEvent, ingameTime);
+  upsertCampaignSettings(db, world);
+  replaceStoryArcs(db, storyArcs, locationId, ingameTime);
+
+  const cfg = readSaveConfig(saveName) || {};
+  cfg.activePlayerCharacterId = playerCharacterId || null;
+  cfg.setupComplete = true;
+  const activePaths = getActivePaths();
+  const configPath = activePaths?.configPath || path.join(__dirname, "saves", String(saveName), "config.json");
+  fs.writeFileSync(configPath, JSON.stringify(cfg, null, 2), "utf8");
+
+  return { locationId, playerCharacterId, questId };
+}
+
+function getCampaignSettings(db) {
+  if (!tableExists(db, "campaign_settings")) return null;
+  return safeGet(db, `SELECT * FROM campaign_settings ORDER BY id DESC LIMIT 1`);
+}
+
+function getRelevantStoryArcs(db, limit = 3) {
+  if (!tableExists(db, "story_arcs")) return [];
+  try {
+    return db.prepare(`
+      SELECT code, title, arc_type, status, stage, stages_total, progress, threat_level, summary
+      FROM story_arcs
+      WHERE status = 'active'
+      ORDER BY threat_level DESC, progress DESC, id ASC
+      LIMIT ?
+    `).all(limit);
+  } catch {
+    return [];
+  }
+}
 
 function buildNormalPrompts(db, action, narrateMode, active) {
   const gameTime = getGameTime(db);
@@ -740,6 +955,8 @@ function buildNormalPrompts(db, action, narrateMode, active) {
   const recentEvents = getRecentEvents(db, 5);
   const lastScene = getLastSceneSummary(db, player.id);
   const header = getTimestampHeader(gameTime, location?.name || "Unknown Location");
+  const campaignSettings = getCampaignSettings(db);
+  const storyArcs = getRelevantStoryArcs(db, 3);
 
   const snapshot = {
     game_time: gameTime,
@@ -761,6 +978,8 @@ function buildNormalPrompts(db, action, narrateMode, active) {
     player_inventory: world.inventory,
     active_quests: world.activeQuests,
     visited_locations: world.visitedLocations,
+    campaign_settings: campaignSettings,
+    relevant_story_arcs: storyArcs,
     recent_events: recentEvents,
     last_scene_summary: lastScene ? lastScene.summary_text : null,
     player_action: action,
@@ -774,11 +993,18 @@ You are the Game Master of a persistent DnD 5e-inspired RPG.
 
 ${guides}
 
+CAMPAIGN SETTINGS
+${JSON.stringify(campaignSettings || {}, null, 2)}
+
+RELEVANT STORY ARCS
+${JSON.stringify(storyArcs || [], null, 2)}
+
 PRIMARY TASK
 - Interpret the player's action as an attempted action in a living world.
 - Use the structured world state as canon.
 - Continue from the previous scene rather than resetting the location.
-- Use present NPCs, inventory, quests, exits, and location state when relevant.
+- Prefer advancing current story arcs or grounded local consequences over inventing unrelated major crises.
+- Respect campaign pacing and threat ceilings from campaign settings.
 - If the player attempts something impossible or unsupported by the current scene, explain this naturally in-world and suggest realistic alternatives.
 
 OUTPUT RULES
@@ -808,111 +1034,6 @@ ${JSON.stringify(snapshot, null, 2)}
   return { systemPrompt, userPrompt, snapshot, gameTime, player, location };
 }
 
-// -------------------- API routes --------------------
-
-// Saves / state
-app.get("/api/saves", (req, res) => {
-  try {
-    res.json({ ok: true, saves: listSaves(), activeSave: getActiveSave() });
-  } catch (err) {
-    res.status(500).json({ ok: false, error: err.message });
-  }
-});
-
-app.post("/api/saves", (req, res) => {
-  try {
-    res.json({ ok: true, created: createSave(req.body?.name) });
-  } catch (err) {
-    res.status(400).json({ ok: false, error: err.message });
-  }
-});
-
-app.post("/api/load", (req, res) => {
-  try {
-    setActiveSave(req.body?.name);
-    res.json({ ok: true, activeSave: req.body?.name });
-  } catch (err) {
-    res.status(400).json({ ok: false, error: err.message });
-  }
-});
-
-app.delete("/api/saves/:name", (req, res) => {
-  try {
-    deleteSave(req.params.name);
-    res.json({ ok: true });
-  } catch (err) {
-    res.status(400).json({ ok: false, error: err.message });
-  }
-});
-
-app.get("/api/state", (req, res) => {
-  const db = getDb();
-  const active = getActivePaths();
-  const activeSave = getActiveSave();
-
-  if (!db || !active || !activeSave) {
-    return res.json({
-      ok: true,
-      activeSave: null,
-      narrateMode: false,
-      setupComplete: false,
-      canReloadLast: false,
-      canEditLastTurn: false
-    });
-  }
-
-  try {
-    const time = getGameTime(db);
-    const world = buildWorldContext(db);
-    const player = world.playerCharacter;
-    const location = world.currentLocation;
-    const cfg = readSaveConfig(activeSave) || {};
-    const lastTurn = getLastActiveTurn(db);
-
-    res.json({
-      ok: true,
-      activeSave: active.saveName,
-      gameTime: time,
-      player,
-      location,
-      narrateMode: getNarrateMode(active.saveName),
-      setupComplete: !!cfg.setupComplete,
-      canReloadLast: !!lastTurn,
-      canEditLastTurn: !!lastTurn
-    });
-  } catch (err) {
-    res.status(500).json({ ok: false, error: err.message });
-  } finally {
-    db.close();
-  }
-});
-
-app.get("/api/world-context", (req, res) => {
-  const db = getDb();
-  const active = getActivePaths();
-  if (!db || !active) return res.status(400).json({ ok: false, error: "No active save loaded." });
-
-  try {
-    const world = buildWorldContext(db);
-    res.json({ ok: true, world });
-  } catch (err) {
-    res.status(500).json({ ok: false, error: err.message });
-  } finally {
-    db.close();
-  }
-});
-
-app.post("/api/narrate-mode", (req, res) => {
-  try {
-    const active = getActiveSave();
-    if (!active) return res.status(400).json({ ok: false, error: "No active save loaded." });
-    const saved = setNarrateMode(active, !!req.body?.narrateMode);
-    res.json({ ok: true, narrateMode: saved });
-  } catch (err) {
-    res.status(400).json({ ok: false, error: err.message });
-  }
-});
-
 // Wizard
 app.get("/api/setup/state", (req, res) => {
   try {
@@ -923,7 +1044,6 @@ app.get("/api/setup/state", (req, res) => {
     const draft = readSetupDraft(active) || getDefaultSetupDraft();
     ensureWizardMeta(draft);
     ensureWizardState(draft);
-    const completeness = assessSetupCompleteness(draft);
 
     res.json({
       ok: true,
@@ -932,10 +1052,9 @@ app.get("/api/setup/state", (req, res) => {
       draft,
       messages: draft.wizardMessages || [],
       wizardStage: getCurrentWizardStage(draft),
-      completeness,
+      completeness: assessSetupCompleteness(draft),
       awaitingFinalizeConfirmation: !!draft.wizardMeta.awaitingFinalizeConfirmation,
-      canEditLastWizardPlayer: !!getLastWizardPairInfo(draft),
-      canFinalize: !!completeness.canFinalize
+      canEditLastWizardPlayer: !!getLastWizardPairInfo(draft)
     });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
@@ -950,31 +1069,15 @@ app.post("/api/setup/start", async (req, res) => {
     const config = readSaveConfig(active) || {};
     if (config.setupComplete) return res.json({ ok: true, alreadyComplete: true });
 
-    let draft = readSetupDraft(active) || getDefaultSetupDraft();
-    ensureWizardMeta(draft);
-    ensureWizardState(draft);
-    writeSetupDraft(active, draft);
-
+    const draft = readSetupDraft(active) || getDefaultSetupDraft();
     if ((draft.wizardMessages || []).length > 0) {
-      return res.json({
-        ok: true,
-        message: draft.wizardMessages[draft.wizardMessages.length - 1].content,
-        draft,
-        wizardStage: getCurrentWizardStage(draft),
-        completeness: assessSetupCompleteness(draft)
-      });
+      return res.json({ ok: true, message: draft.wizardMessages[draft.wizardMessages.length - 1].content });
     }
 
     const opening = buildWizardOpeningMessage();
     appendWizardMessage(active, "assistant", opening);
-    draft = readSetupDraft(active) || draft;
-    return res.json({
-      ok: true,
-      message: opening,
-      draft,
-      wizardStage: getCurrentWizardStage(draft),
-      completeness: assessSetupCompleteness(draft)
-    });
+    writeSetupDraft(active, draft);
+    res.json({ ok: true, message: opening, wizardStage: getCurrentWizardStage(draft), completeness: assessSetupCompleteness(draft) });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
   }
@@ -995,146 +1098,164 @@ app.post("/api/setup/message", async (req, res) => {
     ensureWizardMeta(draft);
     ensureWizardState(draft);
 
-    if (detectAutoFillIntent(message)) {
-      draft.wizardState.autoFill = true;
-      writeSetupDraft(active, draft);
-    }
-
     if (overviewIntent(message)) {
-      draft.wizardMeta.awaitingFinalizeConfirmation = false;
-      writeSetupDraft(active, draft);
       appendWizardMessage(active, "user", message);
-
-      const refreshedDraft = await refreshStructuredSetupDraft(active, req.requestId);
-      const summary = buildSetupOverviewText(refreshedDraft);
+      const summary = buildSetupOverviewText(draft);
       appendWizardMessage(active, "assistant", summary);
       return res.json({
         ok: true,
         reply: summary,
-        draft: refreshedDraft,
-        wizardStage: getCurrentWizardStage(refreshedDraft),
-        completeness: assessSetupCompleteness(refreshedDraft),
+        draft,
+        wizardStage: getCurrentWizardStage(draft),
+        completeness: assessSetupCompleteness(draft),
         awaitingFinalizeConfirmation: false
-      });
-    }
-
-    if (explicitFinalizeIntent(message) || likelyFinalizeIntent(message)) {
-      appendWizardMessage(active, "user", message);
-      const refreshedDraft = await refreshStructuredSetupDraft(active, req.requestId);
-      const completeness = assessSetupCompleteness(refreshedDraft);
-
-      if (!completeness.canFinalize) {
-        const nextPrompt = `We are not ready to finalize yet. The wizard is still missing: ${completeness.missing.join(", ")}.
-
-${buildWizardTransitionMessage(getCurrentWizardStage(refreshedDraft), refreshedDraft)}`;
-        appendWizardMessage(active, "assistant", nextPrompt);
-        return res.json({
-          ok: true,
-          reply: nextPrompt,
-          draft: refreshedDraft,
-          wizardStage: getCurrentWizardStage(refreshedDraft),
-          completeness,
-          awaitingFinalizeConfirmation: false
-        });
-      }
-
-      refreshedDraft.wizardMeta.awaitingFinalizeConfirmation = true;
-      setWizardStage(refreshedDraft, "REVIEW");
-      writeSetupDraft(active, refreshedDraft);
-
-      const confirmText = `The setup is ready. I can finalize the campaign now and generate the opening scene, or you can still ask for an overview and edits.
-
-Do you want me to finalize now?`;
-      appendWizardMessage(active, "assistant", confirmText);
-      return res.json({
-        ok: true,
-        reply: confirmText,
-        draft: refreshedDraft,
-        wizardStage: getCurrentWizardStage(refreshedDraft),
-        completeness,
-        awaitingFinalizeConfirmation: true,
-        needsFinalizeConfirmation: true
       });
     }
 
     appendWizardMessage(active, "user", message);
 
-    draft = readSetupDraft(active) || draft;
-    ensureWizardState(draft);
-    const stage = getCurrentWizardStage(draft);
-
-    const raw = await callLmStudio([
-      { role: "system", content: buildStageSystemPrompt(stage, draft) },
-      { role: "user", content: buildStageUserPrompt(stage, draft, message) }
-    ], 2600, 0.6, {
-      saveName: active,
-      flow: `setup_stage_${stage.toLowerCase()}`,
-      requestId: req.requestId
-    });
-
-    const cleaned = cleanNarrative(raw) || raw;
-    appendWizardMessage(active, "assistant", cleaned);
-
-    let syncedDraft = await refreshStructuredSetupDraft(active, req.requestId);
-    ensureWizardMeta(syncedDraft);
-    ensureWizardState(syncedDraft);
-
-    const completeness = assessSetupCompleteness(syncedDraft);
-    let currentStage = getCurrentWizardStage(syncedDraft);
-    const advanced = [];
-
-    while (currentStage !== "REVIEW" && completeness.statuses[currentStage]) {
-      advanced.push(currentStage);
-      currentStage = advanceWizardStage(syncedDraft);
+    if (detectAutoFillIntent(message)) {
+      draft.wizardState.autoFill = true;
+      while (!canFinalizeSetup(draft) && getCurrentWizardStage(draft) !== "REVIEW") {
+        fillStageDefaults(draft, getCurrentWizardStage(draft));
+        advanceWizardStage(draft);
+      }
+    } else {
+      mergePlayerInputIntoStructured(draft, message);
     }
-    writeSetupDraft(active, syncedDraft);
 
-    let reply = cleaned;
-    if (advanced.length > 0) {
-      const transition = buildWizardTransitionMessage(currentStage, syncedDraft);
+    const completeness = assessSetupCompleteness(draft);
+    let reply = "";
+
+    if ((explicitFinalizeIntent(message) || likelyFinalizeIntent(message)) && completeness.canFinalize) {
+      ensureWizardMeta(draft).awaitingFinalizeConfirmation = true;
+      setWizardStage(draft, "REVIEW");
+      reply = `Everything important is now in place.
+
+${buildSetupOverviewText(draft)}
+
+If you are happy with it, press Finalize and I will begin the campaign.`;
+    } else {
+      const stage = getCurrentWizardStage(draft);
+      const systemPrompt = buildStageSystemPrompt(stage, draft);
+      const userPrompt = buildStageUserPrompt(stage, draft, message);
+      const raw = await callLmStudio([
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ], 1200, 0.4);
+      const cleaned = cleanNarrative(raw) || raw;
       reply = `${cleaned}
 
-${transition}`.trim();
-      appendWizardMessage(active, "assistant", transition);
+${buildWizardTransitionMessage(stage, draft)}`.trim();
     }
 
-    return res.json({
+    writeSetupDraft(active, draft);
+    appendWizardMessage(active, "assistant", reply);
+
+    res.json({
       ok: true,
       reply,
-      draft: syncedDraft,
-      wizardStage: currentStage,
-      advancedStages: advanced,
-      completeness,
-      awaitingFinalizeConfirmation: !!syncedDraft.wizardMeta.awaitingFinalizeConfirmation
+      draft,
+      wizardStage: getCurrentWizardStage(draft),
+      completeness: assessSetupCompleteness(draft),
+      awaitingFinalizeConfirmation: !!draft.wizardMeta.awaitingFinalizeConfirmation
     });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
   }
 });
 
-app.post("/api/setup/finalize-request", async (req, res) => {
+app.post("/api/setup/finalize-request", (req, res) => {
+  try {
+    const active = getActiveSave();
+    if (!active) return res.status(400).json({ ok: false, error: "No active save loaded." });
+    const draft = readSetupDraft(active) || getDefaultSetupDraft();
+    const completeness = assessSetupCompleteness(draft);
+    if (!completeness.canFinalize) {
+      return res.status(400).json({ ok: false, error: `Setup is not ready to finalize. Missing: ${completeness.missing.join(", ")}`, draft, completeness });
+    }
+    ensureWizardMeta(draft).awaitingFinalizeConfirmation = true;
+    setWizardStage(draft, "REVIEW");
+    writeSetupDraft(active, draft);
+    res.json({ ok: true, awaitingFinalizeConfirmation: true, draft, completeness });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+function rebuildDraftFromWizardMessages(messages) {
+  let draft = getDefaultSetupDraft();
+  for (const msg of messages) {
+    ensureWizardMessageArray(draft).push(msg);
+    if (msg.role === "user") {
+      if (detectAutoFillIntent(msg.content)) {
+        draft.wizardState.autoFill = true;
+        while (!canFinalizeSetup(draft) && getCurrentWizardStage(draft) !== "REVIEW") {
+          fillStageDefaults(draft, getCurrentWizardStage(draft));
+          advanceWizardStage(draft);
+        }
+      } else {
+        mergePlayerInputIntoStructured(draft, msg.content);
+      }
+    }
+  }
+  return draft;
+}
+
+app.post("/api/setup/edit-last-player-message", async (req, res) => {
   try {
     const active = getActiveSave();
     if (!active) return res.status(400).json({ ok: false, error: "No active save loaded." });
 
-    let draft = await refreshStructuredSetupDraft(active, req.requestId);
-    const completeness = assessSetupCompleteness(draft);
+    const newMessage = String(req.body?.message || "").trim();
+    if (!newMessage) return res.status(400).json({ ok: false, error: "Message is required." });
 
-    if (!completeness.canFinalize) {
-      return res.status(400).json({
-        ok: false,
-        error: `Setup is not ready to finalize. Missing: ${completeness.missing.join(", ")}`,
-        draft,
-        wizardStage: getCurrentWizardStage(draft),
-        completeness
-      });
+    const oldDraft = readSetupDraft(active) || getDefaultSetupDraft();
+    const info = getLastWizardPairInfo(oldDraft);
+    if (!info) return res.status(400).json({ ok: false, error: "No editable wizard player message found." });
+
+    const msgs = ensureWizardMessageArray(oldDraft).slice();
+    msgs[info.lastPlayerIndex].content = newMessage;
+    if (info.followingAiIndex !== -1) {
+      msgs.splice(info.followingAiIndex, 1);
     }
 
-    draft.wizardMeta.awaitingFinalizeConfirmation = true;
-    setWizardStage(draft, "REVIEW");
-    writeSetupDraft(active, draft);
+    let rebuilt = rebuildDraftFromWizardMessages(msgs.filter(m => m.role === "user"));
+    rebuilt.wizardMessages = msgs.filter(m => m.role === "user");
+    ensureWizardMeta(rebuilt);
 
-    res.json({ ok: true, awaitingFinalizeConfirmation: true, draft, wizardStage: "REVIEW", completeness });
+    let reply = "";
+    if (overviewIntent(newMessage)) {
+      reply = buildSetupOverviewText(rebuilt);
+    } else {
+      const stage = getCurrentWizardStage(rebuilt);
+      const raw = await callLmStudio([
+        { role: "system", content: buildStageSystemPrompt(stage, rebuilt) },
+        { role: "user", content: buildStageUserPrompt(stage, rebuilt, newMessage) }
+      ], 1200, 0.4);
+      const cleaned = cleanNarrative(raw) || raw;
+      reply = `${cleaned}
+
+${buildWizardTransitionMessage(stage, rebuilt)}`.trim();
+    }
+
+    appendWizardMessage(active, "assistant", reply);
+    rebuilt = readSetupDraft(active) || rebuilt;
+    rebuilt = rebuildDraftFromWizardMessages(msgs.filter(m => m.role === "user"));
+    ensureWizardMessageArray(rebuilt).length = 0;
+    for (const m of msgs.filter(m => m.role === "user")) ensureWizardMessageArray(rebuilt).push(m);
+    ensureWizardMessageArray(rebuilt).push({ role: "assistant", content: reply, createdAt: new Date().toISOString() });
+    writeSetupDraft(active, rebuilt);
+
+    return res.json({
+      ok: true,
+      editedMessage: newMessage,
+      reply,
+      draft: rebuilt,
+      wizardStage: getCurrentWizardStage(rebuilt),
+      completeness: assessSetupCompleteness(rebuilt),
+      awaitingFinalizeConfirmation: false
+    });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
   }
@@ -1149,7 +1270,7 @@ app.post("/api/setup/complete", async (req, res) => {
     if (!db) return res.status(400).json({ ok: false, error: "No database available." });
 
     try {
-      let draft = await refreshStructuredSetupDraft(active, req.requestId);
+      let draft = readSetupDraft(active) || getDefaultSetupDraft();
       const completeness = assessSetupCompleteness(draft);
       if (!completeness.canFinalize) {
         return res.status(400).json({
@@ -1161,8 +1282,7 @@ app.post("/api/setup/complete", async (req, res) => {
         });
       }
 
-      ensureWizardMeta(draft);
-      draft.wizardMeta.awaitingFinalizeConfirmation = false;
+      ensureWizardMeta(draft).awaitingFinalizeConfirmation = false;
       setWizardStage(draft, "REVIEW");
       writeSetupDraft(active, draft);
 
@@ -1191,8 +1311,8 @@ Do not reveal your reasoning.`
         },
         {
           role: "user",
-          content: `SETUP DRAFT:
-${JSON.stringify(draft, null, 2)}
+          content: `FINALIZED SETUP:
+${JSON.stringify(draft.structuredSetup, null, 2)}
 
 WORLD STATE:
 ${JSON.stringify({ game_time: gameTime, player_character: player, location, world_context: world }, null, 2)}
@@ -1216,80 +1336,6 @@ ${opening}`);
   }
 });
 
-app.post("/api/setup/edit-last-player-message", async (req, res) => {
-  try {
-    const active = getActiveSave();
-    if (!active) return res.status(400).json({ ok: false, error: "No active save loaded." });
-
-    const newMessage = String(req.body?.message || "").trim();
-    if (!newMessage) return res.status(400).json({ ok: false, error: "Message is required." });
-
-    const draft = readSetupDraft(active) || getDefaultSetupDraft();
-    ensureWizardMeta(draft);
-    ensureWizardState(draft);
-
-    const info = getLastWizardPairInfo(draft);
-    if (!info) return res.status(400).json({ ok: false, error: "No editable wizard player message found." });
-
-    draft.wizardMessages[info.lastPlayerIndex].content = newMessage;
-    if (info.followingAiIndex !== -1) {
-      draft.wizardMessages.splice(info.followingAiIndex, 1);
-    }
-
-    draft.wizardMeta.awaitingFinalizeConfirmation = false;
-    if (detectAutoFillIntent(newMessage)) draft.wizardState.autoFill = true;
-    writeSetupDraft(active, draft);
-
-    appendWizardMessage(active, "user", newMessage);
-
-    let refreshed = await refreshStructuredSetupDraft(active, req.requestId);
-    const stage = getCurrentWizardStage(refreshed);
-
-    const raw = await callLmStudio([
-      { role: "system", content: buildStageSystemPrompt(stage, refreshed) },
-      { role: "user", content: buildStageUserPrompt(stage, refreshed, newMessage) }
-    ], 2600, 0.6, {
-      saveName: active,
-      flow: `setup_edit_stage_${stage.toLowerCase()}`,
-      requestId: req.requestId
-    });
-
-    const cleaned = cleanNarrative(raw) || raw;
-    appendWizardMessage(active, "assistant", cleaned);
-
-    refreshed = await refreshStructuredSetupDraft(active, req.requestId);
-    const completeness = assessSetupCompleteness(refreshed);
-    let currentStage = getCurrentWizardStage(refreshed);
-    const advanced = [];
-    while (currentStage !== "REVIEW" && completeness.statuses[currentStage]) {
-      advanced.push(currentStage);
-      currentStage = advanceWizardStage(refreshed);
-    }
-    writeSetupDraft(active, refreshed);
-
-    let reply = cleaned;
-    if (advanced.length > 0) {
-      const transition = buildWizardTransitionMessage(currentStage, refreshed);
-      reply = `${cleaned}\n\n${transition}`.trim();
-      appendWizardMessage(active, "assistant", transition);
-    }
-
-    return res.json({
-      ok: true,
-      editedMessage: newMessage,
-      reply,
-      awaitingFinalizeConfirmation: false,
-      draft: refreshed,
-      wizardStage: currentStage,
-      advancedStages: advanced,
-      completeness
-    });
-  } catch (err) {
-    res.status(500).json({ ok: false, error: err.message });
-  }
-});
-
-// Normal turn
 // Normal turn
 app.post("/api/turn", async (req, res) => {
   const db = getDb();

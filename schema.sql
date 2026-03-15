@@ -964,21 +964,18 @@ CREATE INDEX IF NOT EXISTS idx_scene_summaries_turn_id ON scene_summaries(turn_i
 
 -- INDEX: idx_turn_history_is_active
 CREATE INDEX IF NOT EXISTS idx_turn_history_is_active ON turn_history(is_active);
-
-
 -- TABLE: campaign_settings
 CREATE TABLE IF NOT EXISTS campaign_settings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     code TEXT NOT NULL UNIQUE,
-    campaign_length TEXT NOT NULL DEFAULT 'long',
-    pacing TEXT NOT NULL DEFAULT 'balanced',
-    campaign_style TEXT NOT NULL DEFAULT 'mixed',
-    narrative_focus TEXT NOT NULL DEFAULT 'mixed',
-    world_complexity TEXT NOT NULL DEFAULT 'medium',
-    threat_floor INTEGER NOT NULL DEFAULT 1,
-    threat_ceiling INTEGER NOT NULL DEFAULT 5,
-    escalation_speed TEXT NOT NULL DEFAULT 'medium',
-    current_global_threat_level INTEGER NOT NULL DEFAULT 1,
+    campaign_length TEXT,
+    campaign_pacing TEXT,
+    campaign_style TEXT,
+    world_complexity TEXT,
+    narrative_focus TEXT,
+    threat_floor INTEGER DEFAULT 1,
+    threat_ceiling INTEGER DEFAULT 5,
+    escalation_speed TEXT,
     notes TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -992,20 +989,19 @@ CREATE TABLE IF NOT EXISTS story_arcs (
     arc_type TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'active',
     stage INTEGER NOT NULL DEFAULT 1,
-    stages_total INTEGER NOT NULL DEFAULT 5,
+    stages_total INTEGER NOT NULL DEFAULT 4,
     progress INTEGER NOT NULL DEFAULT 0,
     threat_level INTEGER NOT NULL DEFAULT 1,
     related_location_id INTEGER,
-    related_player_character_id INTEGER,
     summary TEXT,
     notes TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ingame_created_at TEXT,
     ingame_updated_at TEXT,
-    FOREIGN KEY (related_location_id) REFERENCES locations(id) ON DELETE SET NULL,
-    FOREIGN KEY (related_player_character_id) REFERENCES player_characters(id) ON DELETE SET NULL
+    FOREIGN KEY (related_location_id) REFERENCES locations(id) ON DELETE SET NULL
 );
 
+CREATE INDEX IF NOT EXISTS idx_campaign_settings_created_at ON campaign_settings(created_at);
 CREATE INDEX IF NOT EXISTS idx_story_arcs_status ON story_arcs(status);
-CREATE INDEX IF NOT EXISTS idx_story_arcs_location ON story_arcs(related_location_id);
+CREATE INDEX IF NOT EXISTS idx_story_arcs_arc_type ON story_arcs(arc_type);
